@@ -1,2 +1,5 @@
 # Dungeons & Dragons Dungeon Generator
-Dungeons & Dragons homebrew dungeon generator for a university project course.
+## Documentation
+[Specification](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/SPECIFICATIONS.md)
+## Weekly reports
+[Report 1](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-1.md)
