@@ -17,6 +17,7 @@ O(n<sup>2</sup>), the time complexity of Prim's algorithm utilizing adjacency li
 O(n) as the generated dungeon will only feature a specified number of cells.
 ## Sources
 [Idea](https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/)
+
 [Time complexity of Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm#Time_complexity)
 ## Curriculum
 Bachelor's in computer science (Tietojenkäsittelytieteen kandidaatti, TKT)
