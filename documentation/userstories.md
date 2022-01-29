@@ -55,3 +55,4 @@ The feature has to be developed as specified in this document and have a reasona
     - A locked door graphic appears at one of the exits of a door puzzle room **(U)**
     - A room with a loot puzzle must have a loot table specified **(U)**
     - The required GUI element **(U)**
+- Varied room shapes on the map **(U)**

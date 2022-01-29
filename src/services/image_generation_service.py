@@ -11,11 +11,11 @@ class ImageGenerationService:
     """
 
     def __init__(self, map_width=1000, map_height=1000):
-        """The constructor used for generating a new ImageGenerationService object
+        """Create a new ImageGenerationService object
 
         Args:
-            map_width: the width of the generated image in pixels
-            map_height: the height of the generated image in pixels
+            map_width: The width of the generated image in pixels
+            map_height: The height of the generated image in pixels
         """
 
         self._map_width = map_width
@@ -23,14 +23,14 @@ class ImageGenerationService:
         self.image = Image.new("RGBA", (map_width, map_height))
         self._image_draw = ImageDraw.Draw(self.image)
 
-    def generate_room(self, room_position_x=0, room_position_y=0, room_width=100, room_height=100):
-        """Generates a room of specified dimensions and position
+    def draw_room(self, room_position_x=0, room_position_y=0, room_width=100, room_height=100):
+        """Draws a room of specified dimensions and position
 
         Args:
             room_position_x: The x coordinate of the room.
-                             The coordinate matches the x coordinate of the top left corner.
+            The coordinate matches the x coordinate of the top left corner.
             room_position_y: The y coordinate of the room.
-                             The coordinate matches the y coordinate of the top left corner.
+            The coordinate matches the y coordinate of the top left corner.
             room_width: The width of the room in pixels
             room_height: The height of the room in pixels
         """
@@ -40,8 +40,8 @@ class ImageGenerationService:
         self._image_draw.rectangle((room_position_x, room_position_y, lower_right_x, lower_right_y),
                                     fill=(255,255,255,128))
 
-    def generate_grid(self, cell_width=20, cell_height=20, line_thickness=1):
-        """Generates the movement grid for the map. Should be used last as this one is on top.
+    def draw_grid(self, cell_width=20, cell_height=20, line_thickness=1):
+        """Draws the movement grid for the map. Should be used last as this one is on top.
 
         Args:
             cell_width: The width of an individual grid cell in pixels
