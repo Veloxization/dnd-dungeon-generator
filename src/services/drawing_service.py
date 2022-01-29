@@ -26,15 +26,36 @@ class DrawingService:
         self._cell_size = cell_size
         self._map = map_entity
 
-    def draw_rooms(self): # pragma: no cover
+    def draw_rooms(self): # Test with mock
         """Draw the generated rooms on the map, if possible"""
 
         for room in self._room_generation_service.rooms:
             if self._can_draw_room(room):
                 room.toggle_generated()
                 coordinates = self._get_coordinate_value(room.coordinates[0], room.coordinates[1])
-                self._image_generation_service.draw_room(coordinates[0], coordinates[1],
-                                                         room.width, room.height)
+                self._image_generation_service.draw_room(coordinates[0],
+                                                         coordinates[1],
+                                                         room.width*self._cell_size[0],
+                                                         room.height*self._cell_size[1])
+
+    def draw_grid(self, line_thickness=1): # Test with mock
+        """Draw the movement grid for the map. Should be called last.
+
+        Args:
+            line_thickness: The desired thickness of the grid lines
+        """
+
+        self._image_generation_service.draw_grid(self._cell_size[0],
+                                                 self._cell_size[1],
+                                                 line_thickness)
+
+    def get_image(self):
+        """Get the image object from the ImageGenerationService
+        
+        Returns: The generated image object
+        """
+
+        return self._image_generation_service.get_generated_image()
 
     def _can_draw_room(self, room):
         """Checks if the room can be generated in the allotted space.

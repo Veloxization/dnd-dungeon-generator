@@ -20,7 +20,7 @@ class ImageGenerationService:
 
         self._map_width = map_width
         self._map_height = map_height
-        self.image = Image.new("RGBA", (map_width, map_height))
+        self.image = Image.new("RGBA", (map_width, map_height), color=(0,0,0,255))
         self._image_draw = ImageDraw.Draw(self.image)
 
     def draw_room(self, room_position_x=0, room_position_y=0, room_width=100, room_height=100):
