@@ -14,8 +14,8 @@ This personal document serves as a way to prioritise different parts of the proj
 The feature has to be developed as specified in this document and have a reasonable test coverage (i.e. important parts are tested, not getters and setters etc.)
 
 ## User stories
-- The program can generate a movement grid **(S)**
-- The program can generate rooms of various sizes **(S)**
+- The program can generate a movement grid **(D)**
+- The program can generate rooms of various sizes **(D)**
 - The program can generate hallways **(U)**
 - The hallways are reasonably connected to the rooms **(U)**
 - The user can specify the size of the dungeon **(U)**
