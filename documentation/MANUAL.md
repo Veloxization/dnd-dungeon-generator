@@ -13,7 +13,7 @@ All the implemented tests will be run.
 ### Generate a coverage report
 `poetry run invoke coverage-report`
 
-Generates the coverage report in-terminal. A directory called *htmlcov* is also generated in the root directory. By opening *index.html* within that folder, you get a more user-friendly coverage report.
+Generates the coverage report in-terminal. A directory called *htmlcov* is also generated in the root directory. By opening *index.html* within that directory, you get a more user-friendly coverage report.
 ### Code style check
 `poetry run invoke lint`
 ### Demo the current version of the program

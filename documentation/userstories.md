@@ -2,13 +2,13 @@
 This personal document serves as a way to prioritise different parts of the project. The higher a feature is on the list, the more likely it will be developed.
 
 ## Legend
-**(U)**ndone
+**(U)** Undone
 
-**(S)**tarted
+**(S)** Started
 
-**(D)**one
+**(D)** Done
 
-**(I)**nterrupted
+**(I)** Interrupted
 
 ## Definition of "Done"
 The feature has to be developed as specified in this document and have a reasonable test coverage (i.e. important parts are tested, not getters and setters etc.)
