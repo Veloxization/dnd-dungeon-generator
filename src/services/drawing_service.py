@@ -37,6 +37,9 @@ class DrawingService:
                                                          coordinates[1],
                                                          room.width*self._cell_size[0],
                                                          room.height*self._cell_size[1])
+                for y_coord in range(room.coordinates[1], room.coordinates[1] + room.height):
+                    for x_coord in range(room.coordinates[0], room.coordinates[0] + room.width):
+                        self._map.occupy(x_coord, y_coord)
 
     def draw_grid(self, line_thickness=1): # Test with mock
         """Draw the movement grid for the map. Should be called last.
