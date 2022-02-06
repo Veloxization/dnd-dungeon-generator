@@ -4,7 +4,9 @@
 ## Documentation
 - [Specification](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/SPECIFICATIONS.md)
 - [Manual](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/MANUAL.md)
+- [Testing](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/TESTING.md)
 - [User stories](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/userstories.md)
 ## Weekly reports
 - [Report 1](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-1.md)
 - [Report 2](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-2.md)
+- [Report 3](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-3.md)
