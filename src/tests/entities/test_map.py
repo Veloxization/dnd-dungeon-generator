@@ -23,7 +23,41 @@ class TestMap(unittest.TestCase):
         self.test_map1.occupy(0,0)
         self.assertEqual(self.test_map1.cells[(0,0)], Status.OCCUPIED)
 
+    def test_an_unoccupied_cells_status_changes_correctly(self):
+        self.assertNotIn((0,0), self.test_map1.cells)
+        self.test_map1.unoccupy(0,0)
+        self.assertEqual(self.test_map1.cells[(0,0)], Status.UNOCCUPIED)
+
+    def test_an_unoccupied_cells_status_changes_correctly_when_status_is_unoccupied(self):
+        self.test_map1.unoccupy(0,0)
+        self.assertEqual(self.test_map1.cells[(0,0)], Status.UNOCCUPIED)
+        self.test_map1.occupy(0,0)
+        self.assertEqual(self.test_map1.cells[(0,0)], Status.OCCUPIED)
+
     def test_an_adjacent_occupied_cells_status_changes_correctly(self):
         self.assertNotIn((0,1), self.test_map1.cells)
         self.test_map1.occupy(0,0)
         self.assertEqual(self.test_map1.cells[(0,1)], Status.ADJACENT_OCCUPIED)
+
+    def test_an_adjacent_occupied_cell_can_become_occupied(self):
+        self.test_map1.occupy(0,0)
+        self.assertEqual(self.test_map1.cells[(0,1)], Status.ADJACENT_OCCUPIED)
+        self.test_map1.occupy(0,1)
+        self.assertEqual(self.test_map1.cells[(0,1)], Status.OCCUPIED)
+
+    def test_an_occupied_cell_cannot_become_adjacent_occupied(self):
+        self.test_map1.occupy(0,0)
+        self.assertEqual(self.test_map1.cells[(0,0)], Status.OCCUPIED)
+        self.test_map1.occupy(0,1)
+        self.assertEqual(self.test_map1.cells[(0,0)], Status.OCCUPIED)
+
+    def test_a_cell_is_correctly_deemed_a_dead_end(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,2)
+        self.assertTrue(self.test_map1.is_cell_dead_end(1,2))
+
+    def test_a_cell_is_not_incorrectly_deemed_a_dead_end(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,2)
+        self.test_map1.occupy(2,1)
+        self.assertFalse(self.test_map1.is_cell_dead_end(1,1))

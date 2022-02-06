@@ -44,6 +44,41 @@ class Map:
         for cell in self._get_adjacent_cells(cell_x, cell_y):
             if cell not in self.cells:
                 self.cells[cell] = Status.ADJACENT_OCCUPIED
+            elif self.cells[cell] == Status.UNOCCUPIED:
+                self.cells[cell] = Status.ADJACENT_OCCUPIED
+
+    def unoccupy(self, cell_x, cell_y):
+        """Unoccupy a cell and adjacent cells if applicable
+        
+        Args:
+            cell_x: The x coordinate of the cell to occupy
+            cell_y: The y coordinate of the cell to occupy
+        """
+
+        self.cells[(cell_x, cell_y)] = Status.UNOCCUPIED
+
+    def is_cell_dead_end(self, cell_x, cell_y):
+        """Check if the specified cell is a dead end,
+        i.e. if it has less than two occupied neighbors.
+
+        Args:
+            cell_x: The x coordinate of the cell to check
+            cell_y: The y coordinate of the cell to check
+
+        Returns: True if the cell is a dead end, false otherwise.
+        """
+
+        number_of_cells = 0
+        if self.is_cell_occupied(cell_x - 1, cell_y):
+            number_of_cells += 1
+        if self.is_cell_occupied(cell_x + 1, cell_y):
+            number_of_cells += 1
+        if self.is_cell_occupied(cell_x, cell_y - 1):
+            number_of_cells += 1
+        if self.is_cell_occupied(cell_x, cell_y + 1):
+            number_of_cells += 1
+
+        return number_of_cells < 2
 
     def _get_adjacent_cells(self, cell_x, cell_y):
         """Get the non-diagonally adjacent cells of a given cell
@@ -66,3 +101,19 @@ class Map:
             adjacent_cells.append((cell_x, cell_y+1))
 
         return adjacent_cells
+
+    def is_cell_occupied(self, cell_x, cell_y):
+        """Checks whether the specified cell is occupied
+
+        Args:
+            cell_x: The x coordinate of the cell to check
+            cell_y: The y coordinate of the cell to check
+
+        Returns: True if the cell is occupied, False otherwise
+        """
+
+        if (cell_x, cell_y) in self.cells:
+            if self.cells[(cell_x, cell_y)] == Status.OCCUPIED:
+                return True
+
+        return False

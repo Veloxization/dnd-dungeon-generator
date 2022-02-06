@@ -10,13 +10,17 @@ This personal document serves as a way to prioritise different parts of the proj
 
 **(I)** Interrupted
 
+**(S/D)** Done with minor issues needing fixes
+
+**(I/D)** Considered done even with issues
+
 ## Definition of "Done"
 The feature has to be developed as specified in this document and have a reasonable test coverage (i.e. important parts are tested, not getters and setters etc.)
 
 ## User stories
 - The program can generate a movement grid **(D)**
 - The program can generate rooms of various sizes **(D)**
-- The program can generate hallways **(U)**
+- The program can generate hallways **(S/D)**
 - The hallways are reasonably connected to the rooms **(U)**
 - The user can specify the size of the dungeon **(U)**
     - The required GUI element **(U)**

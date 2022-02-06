@@ -26,7 +26,7 @@ class DrawingService:
         self._cell_size = cell_size
         self._map = map_entity
 
-    def draw_rooms(self): # Test with mock
+    def draw_rooms(self):
         """Draw the generated rooms on the map, if possible"""
 
         for room in self._room_generation_service.rooms:
@@ -41,7 +41,20 @@ class DrawingService:
                     for x_coord in range(room.coordinates[0], room.coordinates[0] + room.width):
                         self._map.occupy(x_coord, y_coord)
 
-    def draw_grid(self, line_thickness=1): # Test with mock
+    def draw_corridors(self):
+        """Draw the generated corridors on the map"""
+
+        for y_coord in range(self._map.map_height):
+            for x_coord in range(self._map.map_width):
+                if (x_coord, y_coord) in self._map.cells:
+                    if self._map.cells[(x_coord, y_coord)] == Status.OCCUPIED:
+                        coordinates = self._get_coordinate_value(x_coord, y_coord)
+                        self._image_generation_service.draw_room(coordinates[0],
+                                                                coordinates[1],
+                                                                self._cell_size[0],
+                                                                self._cell_size[1])
+
+    def draw_grid(self, line_thickness=1):
         """Draw the movement grid for the map. Should be called last.
 
         Args:

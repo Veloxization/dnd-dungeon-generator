@@ -19,6 +19,8 @@ O(n) as the generated dungeon will only feature a specified number of cells.
 [Idea](https://journal.stuffwithstuff.com/2014/12/21/rooms-and-mazes/)
 
 [Time complexity of Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm#Time_complexity)
+
+[Maze generation with randomized Prim's algorithm](https://medium.com/swlh/fun-with-python-1-maze-generator-931639b4fb7e)
 ## Curriculum
 Bachelor's in computer science (Tietojenkäsittelytieteen kandidaatti, TKT)
 ## Language used in documentation
