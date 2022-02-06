@@ -2,7 +2,7 @@
 This program has been automatically tested using pytest. Always up-to-date testing coverage percentage is available in the [README](https://github.com/Veloxization/dnd-dungeon-generator/blob/master/README.md). Instructions on running the tests and creating the complete coverage report in [MANUAL](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/MANUAL.md).
 
 ## Coverage report
-<img src="https://github.com/Veloxization/dnd-dungeon-generator/blob/master/documentation/images/coveragereport.png">
+<img src="https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/images/coveragereport.png">
 
 ## What has been tested?
 ### entities/map
