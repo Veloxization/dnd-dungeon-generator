@@ -19,7 +19,6 @@ def main():
     drawing.draw_corridors()
     drawing.draw_grid()
     MapRepository(drawing.get_image()).save("demo/test")
-    print(map_obj)
 
 if __name__ == "__main__":
     main()
