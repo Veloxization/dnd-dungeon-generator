@@ -59,13 +59,13 @@ class MazeGenerationService:
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
                             continue
-                if rand_wall[1] - 1 > 0:
+                if rand_wall[1] - 1 >= 0:
                     if (self._maze_cells[rand_wall[0]][rand_wall[1] - 1] == 'u'
                     and self._maze_cells[rand_wall[0]][rand_wall[1] + 1] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
                             continue
-                if rand_wall[0] - 1 > 0:
+                if rand_wall[0] - 1 >= 0:
                     if (self._maze_cells[rand_wall[0] - 1][rand_wall[1]] == 'u'
                     and self._maze_cells[rand_wall[0] + 1][rand_wall[1]] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
