@@ -9,7 +9,8 @@ class MazeGenerationService:
         maze_cells: A two-dimensional list containing the status of the cells.
         (u)nvisited, (r)oom, (w)all and (p)assage.
         Initially all cells are unvisited.
-        walls: A list containing the locations of the walls generated so far"""
+        walls: A list containing the locations of the walls generated so far
+    """
 
     def __init__(self, map_object):
         """Create a new MazeGenerationService object
@@ -48,25 +49,25 @@ class MazeGenerationService:
             while self._walls:
                 rand_wall = random.choice(self._walls)
                 if rand_wall[1] + 1 < self._map.map_height:
-                    if (self._maze_cells[rand_wall[0]][rand_wall[1] + 1] == 'u'
+                    if (self._maze_cells[rand_wall[0]][rand_wall[1] + 1] in ('u', 'w')
                     and self._maze_cells[rand_wall[0]][rand_wall[1] - 1] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
                             continue
                 if rand_wall[0] + 1 < self._map.map_width:
-                    if (self._maze_cells[rand_wall[0] + 1][rand_wall[1]] == 'u'
+                    if (self._maze_cells[rand_wall[0] + 1][rand_wall[1]] in ('u', 'w')
                     and self._maze_cells[rand_wall[0] - 1][rand_wall[1]] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
                             continue
                 if rand_wall[1] - 1 >= 0:
-                    if (self._maze_cells[rand_wall[0]][rand_wall[1] - 1] == 'u'
+                    if (self._maze_cells[rand_wall[0]][rand_wall[1] - 1] in ('u', 'w')
                     and self._maze_cells[rand_wall[0]][rand_wall[1] + 1] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
                             continue
                 if rand_wall[0] - 1 >= 0:
-                    if (self._maze_cells[rand_wall[0] - 1][rand_wall[1]] == 'u'
+                    if (self._maze_cells[rand_wall[0] - 1][rand_wall[1]] in ('u', 'w')
                     and self._maze_cells[rand_wall[0] + 1][rand_wall[1]] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
                             self._add_passage(rand_wall)
@@ -76,6 +77,22 @@ class MazeGenerationService:
             starting_point = self._find_starting_point()
 
         self._prune_disattached_cells()
+
+    def connect_maze_to_rooms(self):
+        """Connect passage cells to room cells."""
+
+    def _get_connections(self):
+        """Find all room-to-room or passage-to-room connections.
+
+        Returns: A dictionary object where the keys are (x, y) tuples of the coordinates of
+        the connections and the values are tuples with IDs of the two regions the connection
+        connects
+        """
+        for y_coord in range(self._map.map_height):
+            for x_coord in range(self._map.map_width):
+                if (self._maze_cells[x_coord][y_coord] == 'w'
+                and self._count_adjacent_passages((x_coord, y_coord)) == 2):
+                    pass
 
     def _add_wall(self, coordinates):
         """Adds a wall to the specified coordinates
@@ -105,7 +122,7 @@ class MazeGenerationService:
         self._add_wall((coordinates[0] - 1, coordinates[1]))
 
     def _count_adjacent_passages(self, coordinates):
-        """Counts the undiagonally adjacent passage cells to the given coordinates
+        """Counts the undiagonally adjacent passage and room cells to the given coordinates
 
         Args:
             coordinates: (int, int) Tuple containing the coordinates of the cell to check
@@ -114,13 +131,13 @@ class MazeGenerationService:
         """
 
         passage_num = 0
-        if self._maze_cells[coordinates[0]][coordinates[1]+1] == 'p':
+        if self._maze_cells[coordinates[0]][coordinates[1]+1] in ('p', 'r'):
             passage_num += 1
-        if self._maze_cells[coordinates[0]][coordinates[1]-1] == 'p':
+        if self._maze_cells[coordinates[0]][coordinates[1]-1] in ('p', 'r'):
             passage_num += 1
-        if self._maze_cells[coordinates[0]+1][coordinates[1]] == 'p':
+        if self._maze_cells[coordinates[0]+1][coordinates[1]] in ('p', 'r'):
             passage_num += 1
-        if self._maze_cells[coordinates[0]-1][coordinates[1]] == 'p':
+        if self._maze_cells[coordinates[0]-1][coordinates[1]] in ('p', 'r'):
             passage_num += 1
 
         return passage_num
@@ -141,7 +158,7 @@ class MazeGenerationService:
         return None
 
     def _prune_disattached_cells(self): # pragma: no cover
-        """A temporary solution to remove disattached cells"""
+        """Remove passage cells that have no passage neighbours"""
 
         for y_coord in range(self._map.map_height):
             for x_coord in range(self._map.map_width):

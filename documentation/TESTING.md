@@ -30,6 +30,16 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by occupying cells (1,1) and (1,2), then checking that (1,2) is considered a dead end
 - When a cell has more than one neighbour, it is not considered a dead end
     - Tested by occupying cells (1,1), (1,2) and (2,1) and checking that (1,1) is not considered a dead end
+- When a cell that has two occupied neighbors has one neighbor marked unoccupied, the cell itself does not become unoccupied
+    - Tested by occupying cells (1,1) and (1,3) and then unoccupying cell (1,1) and checking that cell (1,2) between them didn't get unoccupied
+- When a cell gets unoccupied, its adjacent neighbors also get unoccupied
+    - Tested by occupying cell (1,1) and checking that the cells around it turn into unoccupied cells after cell (1,1) is unoccupied
+- When two non-adjacent cells are occupied, they are placed in separate regions
+    - Tested by occupying cells (1,1) and (3,3) and checking that the cells appear in regions 0 and 1 respectively
+- When two adjacent cells are occupied, they are placed in the same region
+    - Tested by occupying cells (1,1) and (1,2) and checking that both cells appear in region 0
+- When an occupied cell is marked unoccupied, it's also removed from its region
+    - Tested by occupying cell (1,1) and (1,2), then unoccupying cell (1,1) and checking that it no longer appears in region 0
 ### services/drawing_service
 - When a room's right edge extends beyond the right edge of the map, it's not drawn
     - Tested by drawing a 2x2 room to coordinates (49,1) on a 50x50 map and checking that it can't be drawn

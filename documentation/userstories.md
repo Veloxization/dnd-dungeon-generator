@@ -20,11 +20,11 @@ The feature has to be developed as specified in this document and have a reasona
 ## User stories
 - The program can generate a movement grid **(D)**
 - The program can generate rooms of various sizes **(D)**
-- The program can generate hallways **(S/D)**
-- The hallways are reasonably connected to the rooms **(U)**
+- The program can generate hallways **(D)**
+- The hallways are reasonably connected to the rooms **(S)**
 - The user can specify the size of the dungeon **(U)**
     - The required GUI element **(U)**
-- The user can specify the likelyhood of loops (the "imperfectness" of the maze) **(U)**
+- The user can specify the likelihood of loops (the "imperfectness" of the maze) **(U)**
     - The required GUI element **(U)**
 - The user can specify the average size of rooms **(U)**
     - The required GUI element **(U)**

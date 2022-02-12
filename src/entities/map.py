@@ -17,6 +17,14 @@ class Map:
         cells: A dictionary which keeps track of the status of individual cells.
         A coordinate tuple (x, y) acts as the key.
         The status enumerator acts as the value.
+        regions: A dictionary which keeps track of the regions of the map.
+        All cells that can be reached without passing through unoccupied cells
+        belong in the same region.
+        An integer starting from 0 acts as a key.
+        A list of coordinate tuples (x, y) acts as the value.
+        cell_regions: A dictionary which shows which region a certain cell belongs to.
+        A coordinate tuple (x, y) acts as the key.
+        A region identifier integer acts as the value.
         map_width: The width of the dungeon in cells
         map_height: The height of the dungeon in cells
     """
@@ -29,11 +37,14 @@ class Map:
             map_height: The height of the map in cells
         """
         self.cells = {}
+        self.regions = {}
+        self.cell_regions = {}
         self.map_width = map_width
         self.map_height = map_height
 
     def occupy(self, cell_x, cell_y):
-        """Occupy a cell, called when a room or a corridor is added
+        """Occupy a cell, called when a room or a corridor is added.
+        Also handles assigning cells to their regions.
 
         Args:
             cell_x: The x coordinate of the cell to occupy
@@ -46,16 +57,37 @@ class Map:
                 self.cells[cell] = Status.ADJACENT_OCCUPIED
             elif self.cells[cell] == Status.UNOCCUPIED:
                 self.cells[cell] = Status.ADJACENT_OCCUPIED
+            elif self.cells[cell] == Status.OCCUPIED:
+                self.regions[self.cell_regions[cell]].append((cell_x, cell_y))
+                self.cell_regions[(cell_x, cell_y)] = self.cell_regions[cell]
+        if (cell_x, cell_y) not in self.cell_regions:
+            new_region_id = len(self.regions)
+            self.regions[new_region_id] = []
+            self.regions[new_region_id].append((cell_x, cell_y))
+            self.cell_regions[(cell_x, cell_y)] = new_region_id
 
     def unoccupy(self, cell_x, cell_y):
-        """Unoccupy a cell and adjacent cells if applicable
-        
+        """Unoccupy a cell and adjacent cells if applicable.
+        Also removes the cell from its region.
+
         Args:
             cell_x: The x coordinate of the cell to occupy
             cell_y: The y coordinate of the cell to occupy
         """
 
         self.cells[(cell_x, cell_y)] = Status.UNOCCUPIED
+        for cell in self._get_adjacent_cells(cell_x, cell_y):
+            marked_for_removal = True
+            for sub_cell in self._get_adjacent_cells(cell[0], cell[1]):
+                if sub_cell in self.cells:
+                    if self.cells[sub_cell] == Status.OCCUPIED:
+                        marked_for_removal = False
+                        break
+            if marked_for_removal:
+                self.cells[cell] = Status.UNOCCUPIED
+        if (cell_x, cell_y) in self.cell_regions:
+            self.regions[self.cell_regions[(cell_x, cell_y)]].remove((cell_x, cell_y))
+            self.cell_regions.pop((cell_x, cell_y))
 
     def is_cell_dead_end(self, cell_x, cell_y):
         """Check if the specified cell is a dead end,

@@ -61,3 +61,40 @@ class TestMap(unittest.TestCase):
         self.test_map1.occupy(1,2)
         self.test_map1.occupy(2,1)
         self.assertFalse(self.test_map1.is_cell_dead_end(1,1))
+
+    def test_unoccupying_an_occupied_cell_does_not_unoccupy_an_adjacent_cell_of_two_occupied_cells(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,3)
+        self.test_map1.unoccupy(1,1)
+        self.assertEqual(self.test_map1.cells[(1,2)], Status.ADJACENT_OCCUPIED)
+
+    def test_unoccupying_a_cell_also_unoccupies_the_adjacent_cells(self):
+        self.test_map1.occupy(1,1)
+        self.assertEqual(self.test_map1.cells[(0,1)], Status.ADJACENT_OCCUPIED)
+        self.assertEqual(self.test_map1.cells[(2,1)], Status.ADJACENT_OCCUPIED)
+        self.assertEqual(self.test_map1.cells[(1,0)], Status.ADJACENT_OCCUPIED)
+        self.assertEqual(self.test_map1.cells[(1,2)], Status.ADJACENT_OCCUPIED)
+        self.test_map1.unoccupy(1,1)
+        self.assertEqual(self.test_map1.cells[(0,1)], Status.UNOCCUPIED)
+        self.assertEqual(self.test_map1.cells[(2,1)], Status.UNOCCUPIED)
+        self.assertEqual(self.test_map1.cells[(1,0)], Status.UNOCCUPIED)
+        self.assertEqual(self.test_map1.cells[(1,2)], Status.UNOCCUPIED)
+
+    def test_occupying_separate_cells_puts_them_in_their_own_regions(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(3,3)
+        self.assertTrue((1,1) in self.test_map1.regions[0])
+        self.assertTrue((3,3) in self.test_map1.regions[1])
+
+    def test_occupying_adjacent_cells_puts_them_in_the_same_region(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,2)
+        self.assertTrue((1,1) in self.test_map1.regions[0])
+        self.assertTrue((1,2) in self.test_map1.regions[0])
+
+    def test_unoccupying_a_cell_also_removes_it_from_its_region(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,2)
+        self.assertTrue((1,1) in self.test_map1.regions[0])
+        self.test_map1.unoccupy(1,1)
+        self.assertFalse((1,1) in self.test_map1.regions[0])
