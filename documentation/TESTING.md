@@ -39,7 +39,9 @@ This program has been automatically tested using pytest. Always up-to-date testi
 - When two adjacent cells are occupied, they are placed in the same region
     - Tested by occupying cells (1,1) and (1,2) and checking that both cells appear in region 0
 - When an occupied cell is marked unoccupied, it's also removed from its region
-    - Tested by occupying cell (1,1) and (1,2), then unoccupying cell (1,1) and checking that it no longer appears in region 0
+    - Tested by occupying cells (1,1) and (1,2), then unoccupying cell (1,1) and checking that it no longer appears in region 0
+- When two regions are combined, the region with the smaller ID inherits the region with the larger ID
+    - Tested by occupying cells (1,1), (1,3), (1,4) and (2,4), and then occupying cell (1,2), then checking that the region ID of (1,3) and (1,4) and (2,4) becomes 0
 ### services/drawing_service
 - When a room's right edge extends beyond the right edge of the map, it's not drawn
     - Tested by drawing a 2x2 room to coordinates (49,1) on a 50x50 map and checking that it can't be drawn
@@ -80,6 +82,22 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested with a maze filled with walls and checking that the starting point searching function returns _None_
 - When a full maze is generated, no passages will override an already placed room
     - Tested by occupying cell (2,2) and having that act as a room, then checking that a generated maze does not replace this cell
+- When there's a passage on the left and a room on the right with a wall between them, it is considered a valid place for a connection
+    - Tested by occupying cell (3,3) on the map as a room and then adding a passage to (1,3) and checking whether the wall in between is considered a connection
+- When there's a passage on the right and a room on the left with a wall between them, it is considered a valid place for a connection
+    - Tested by occupying cell (1,3) on the map as a room and then adding a passage to (3,3) and checking whether the wall in between is considered a connection
+- When there's a passage above and a room below with a wall between them, it is considered a valid place for a connection
+    - Tested by occupying cell (3,3) on the map as a room and then adding a passage to (3,1) and checking whether the wall in between is considered a connection
+- When there's a passage below and a room above with a wall between them, it is considered a valid place for a connection
+    - Tested by occupying cell (3,1) on the map as a room and then adding a passage to (3,3) and checking whether the wall in between is considered a connection
+- If a cell is not a wall, it is not considered a valid place for a connection
+    - Tested by placing a passage at coordinates (1,1) and a room at coordinates(1,3) and checking that the unvisited cell in between is not considered a connection
+- If nothing has been added to the map, the number of connections is 0
+    - Tested by creating an empty map and checking for valid connections, expecting the number of connections to be 0
+- If there are three rooms with walls between them, the number of valid connections
+    - Tested by creating 1x1 rooms at coordinates (1,1), (1,3) and (3,1), then checking the number of valid connections, expecting 2
+- The first connection is drawn correctly
+    - Tested by creating 1x1 rooms at coordiantes (1,1) and (1,3), then checking if the cell between them becomes a passage when connections are searched
 ### services/room_generation_service
 - When a room is added, it's correctly added into the list of rooms
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms

@@ -78,8 +78,34 @@ class MazeGenerationService:
 
         self._prune_disattached_cells()
 
-    def connect_maze_to_rooms(self):
-        """Connect passage cells to room cells."""
+    def connect_maze_to_rooms(self, odds_of_loops=0.5):
+        """Connect passage cells to room cells, or rooms to other rooms
+
+        Args:
+            odds_of_loops: The odds of the dungeon having loops, between 0 and 1
+        """
+
+        if odds_of_loops < 0: # pragma: no cover
+            odds_of_loops = 0
+        elif odds_of_loops > 1: # pragma: no cover
+            odds_of_loops = 1
+        connections = self._get_connections()
+        rand_connection = random.choice(list(connections.keys()))
+        origin_region = connections[rand_connection][1]
+        self._map.occupy(rand_connection[0], rand_connection[1])
+        self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
+        connections.pop(rand_connection)
+        """while connections:
+            rand_connection = random.choice(list(connections.keys()))
+            if (connections[rand_connection][0] == origin_region
+            and connections[rand_connection][1] == origin_region):
+                if random.random() < odds_of_loops:
+                    self._map.occupy(rand_connection[0], rand_connection[1])
+                    self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
+            else:
+                self._map.occupy(rand_connection[0], rand_connection[1])
+                self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
+            connections.pop(rand_connection)""" # Commented out until issue can be figured out
 
     def _get_connections(self):
         """Find all room-to-room or passage-to-room connections.
@@ -88,11 +114,16 @@ class MazeGenerationService:
         the connections and the values are tuples with IDs of the two regions the connection
         connects
         """
+
+        connections = {}
         for y_coord in range(self._map.map_height):
             for x_coord in range(self._map.map_width):
                 if (self._maze_cells[x_coord][y_coord] == 'w'
                 and self._count_adjacent_passages((x_coord, y_coord)) == 2):
-                    pass
+                    connection = self._get_connection((x_coord, y_coord))
+                    if connection:
+                        connections[(x_coord, y_coord)] = connection
+        return connections
 
     def _add_wall(self, coordinates):
         """Adds a wall to the specified coordinates
@@ -131,16 +162,49 @@ class MazeGenerationService:
         """
 
         passage_num = 0
-        if self._maze_cells[coordinates[0]][coordinates[1]+1] in ('p', 'r'):
-            passage_num += 1
-        if self._maze_cells[coordinates[0]][coordinates[1]-1] in ('p', 'r'):
-            passage_num += 1
-        if self._maze_cells[coordinates[0]+1][coordinates[1]] in ('p', 'r'):
-            passage_num += 1
-        if self._maze_cells[coordinates[0]-1][coordinates[1]] in ('p', 'r'):
-            passage_num += 1
+        if coordinates[1] + 1 < self._map.map_height and coordinates[1] - 1 >= 0:
+            if self._maze_cells[coordinates[0]][coordinates[1]+1] in ('p', 'r'):
+                passage_num += 1
+            if self._maze_cells[coordinates[0]][coordinates[1]-1] in ('p', 'r'):
+                passage_num += 1
+        if coordinates[0] + 1 < self._map.map_width and coordinates[0] - 1 >= 0:
+            if self._maze_cells[coordinates[0]+1][coordinates[1]] in ('p', 'r'):
+                passage_num += 1
+            if self._maze_cells[coordinates[0]-1][coordinates[1]] in ('p', 'r'):
+                passage_num += 1
 
         return passage_num
+
+    def _get_connection(self, coordinates):
+        """Checks whether the given cell is a connection between a room and a corridor or two rooms.
+
+        Args:
+            coordinates: (int, int) Tuple containing the coordinates of the cell to check
+
+        Returns: (int, int) Tuple containing the identifiers of the two regions
+        the connection connects, or None if the cell is not a connection
+        """
+
+        if self._maze_cells[coordinates[0]][coordinates[1]] == 'w':
+            if coordinates[1] + 1 < self._map.map_height and coordinates[1] - 1 > 0:
+                if (self._maze_cells[coordinates[0]][coordinates[1] + 1] in ('r', 'p')
+                and self._maze_cells[coordinates[0]][coordinates[1] - 1] == 'r'):
+                    return (self._map.cell_regions[(coordinates[0], coordinates[1] + 1)],
+                    self._map.cell_regions[(coordinates[0], coordinates[1] - 1)])
+                if (self._maze_cells[coordinates[0]][coordinates[1] - 1] in ('r', 'p')
+                and self._maze_cells[coordinates[0]][coordinates[1] + 1] == 'r'):
+                    return (self._map.cell_regions[(coordinates[0], coordinates[1] - 1)],
+                    self._map.cell_regions[(coordinates[0], coordinates[1] + 1)])
+            if coordinates[0] + 1 < self._map.map_width and coordinates[0] - 1 > 0:
+                if (self._maze_cells[coordinates[0] + 1][coordinates[1]] in ('r', 'p')
+                and self._maze_cells[coordinates[0] - 1][coordinates[1]] == 'r'):
+                    return (self._map.cell_regions[(coordinates[0] + 1, coordinates[1])],
+                    self._map.cell_regions[(coordinates[0] - 1, coordinates[1])])
+                if (self._maze_cells[coordinates[0] - 1][coordinates[1]] in ('r', 'p')
+                and self._maze_cells[coordinates[0] + 1][coordinates[1]] == 'r'):
+                    return (self._map.cell_regions[(coordinates[0] - 1, coordinates[1])],
+                    self._map.cell_regions[(coordinates[0] + 1, coordinates[1])])
+        return None
 
     def _find_starting_point(self):
         """Attempts to find a starting cell for a maze.

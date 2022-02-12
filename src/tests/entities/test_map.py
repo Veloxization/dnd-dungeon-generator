@@ -98,3 +98,16 @@ class TestMap(unittest.TestCase):
         self.assertTrue((1,1) in self.test_map1.regions[0])
         self.test_map1.unoccupy(1,1)
         self.assertFalse((1,1) in self.test_map1.regions[0])
+
+    def test_if_two_regions_are_combined_they_will_become_the_region_with_the_smallest_id(self):
+        self.test_map1.occupy(1,1)
+        self.test_map1.occupy(1,3)
+        self.test_map1.occupy(1,4)
+        self.test_map1.occupy(2,4)
+        self.assertEqual(self.test_map1.cell_regions[(1,3)], 1)
+        self.assertEqual(self.test_map1.cell_regions[(1,4)], 1)
+        self.assertEqual(self.test_map1.cell_regions[(2,4)], 1)
+        self.test_map1.occupy(1,2)
+        self.assertEqual(self.test_map1.cell_regions[(1,3)], 0)
+        self.assertEqual(self.test_map1.cell_regions[(1,4)], 0)
+        self.assertEqual(self.test_map1.cell_regions[(2,4)], 0)

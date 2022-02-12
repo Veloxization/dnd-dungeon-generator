@@ -76,3 +76,52 @@ class TestMazeGenerationService(unittest.TestCase):
         self.maze_generation_service.init_maze()
         self.maze_generation_service.generate_perfect_maze()
         self.assertNotEqual(self.maze_generation_service._maze_cells[2][2], 'p')
+
+    def test_a_passage_on_the_left_is_connected_to_a_room_on_the_right(self):
+        self.map.occupy(3,3)
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((1,3))
+        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (1,0))
+
+    def test_a_passage_on_the_right_is_connected_to_a_room_on_the_left(self):
+        self.map.occupy(1,3)
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((3,3))
+        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (1,0))
+
+    def test_a_passage_above_is_connected_to_a_room_below(self):
+        self.map.occupy(3,3)
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((3,1))
+        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (1,0))
+
+    def test_a_passage_below_is_connected_to_a_room_above(self):
+        self.map.occupy(3,1)
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((3,3))
+        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (1,0))
+
+    def test_non_walls_are_not_considered_connections(self):
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._maze_cells[1][1] = 'p'
+        self.maze_generation_service._maze_cells[1][3] = 'r'
+        self.assertIsNone(self.maze_generation_service._get_connection((1,2)))
+
+    def test_if_the_map_is_empty_there_are_no_connections(self):
+        self.maze_generation_service.init_maze()
+        self.assertEqual(len(self.maze_generation_service._get_connections()), 0)
+
+    def test_the_correct_number_of_connections_is_established(self):
+        self.map.occupy(1,1)
+        self.map.occupy(1,3)
+        self.map.occupy(3,1)
+        self.maze_generation_service.init_maze()
+        self.assertEqual(len(self.maze_generation_service._get_connections()), 2)
+
+    def test_initial_connection_is_correctly_drawn(self):
+        self.map.occupy(1,1)
+        self.map.occupy(1,3)
+        self.maze_generation_service.init_maze()
+        self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'w')
+        self.maze_generation_service.connect_maze_to_rooms()
+        self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'p')

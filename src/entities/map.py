@@ -58,8 +58,20 @@ class Map:
             elif self.cells[cell] == Status.UNOCCUPIED:
                 self.cells[cell] = Status.ADJACENT_OCCUPIED
             elif self.cells[cell] == Status.OCCUPIED:
-                self.regions[self.cell_regions[cell]].append((cell_x, cell_y))
-                self.cell_regions[(cell_x, cell_y)] = self.cell_regions[cell]
+                if (cell_x, cell_y) in self.cell_regions and cell in self.cell_regions:
+                    if self.cell_regions[(cell_x, cell_y)] != self.cell_regions[cell]:
+                        new_region = min(self.cell_regions[(cell_x, cell_y)],
+                                         self.cell_regions[cell])
+                        old_region = max(self.cell_regions[(cell_x, cell_y)],
+                                         self.cell_regions[cell])
+                        self.cell_regions[(cell_x, cell_y)] = new_region
+                        self.cell_regions[cell] = new_region
+                        for value in self.regions[old_region]:
+                            self.cell_regions[value] = new_region
+                        self.regions[new_region].extend(self.regions[old_region])
+                else:
+                    self.regions[self.cell_regions[cell]].append((cell_x, cell_y))
+                    self.cell_regions[(cell_x, cell_y)] = self.cell_regions[cell]
         if (cell_x, cell_y) not in self.cell_regions:
             new_region_id = len(self.regions)
             self.regions[new_region_id] = []
