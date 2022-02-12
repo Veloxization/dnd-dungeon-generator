@@ -49,6 +49,8 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by checking that a mock object's grid drawing function is called with the correct line thickness of 2
 - When trying to get the map image object, the function of the image generation service is called correctly
     - Tested by checking that a mock object's generated image getter function is called
+- Corridors are placed in the correct spots on the map image
+    - Tested by first checking that a corridor drawn to coordinates (1,1) called an image generation service mock object for coordinates (20, 20) and coordinates (1,2) for (20,40)
 ### services/maze_generation_service
 - When a maze is initialized, the rooms added on the map will appear in the maze surrounded by walls
     - Tested by checking that a room generated at coordinates (1,1) will also be marked at coordinates (1,1) and all the adjacent cells are marked as walls
