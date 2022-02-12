@@ -71,3 +71,5 @@ This program has been automatically tested using pytest. Always up-to-date testi
 ### services/room_generation_service
 - When a room is added, it's correctly added into the list of rooms
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms
+- When rooms are randomly generated, the amount of rooms is correct
+    - Tested by first generating 10 random rooms and checking that the amount of rooms is 10, then generating 20 additional rooms and checking that the amount is 30

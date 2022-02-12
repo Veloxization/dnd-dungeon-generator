@@ -10,3 +10,9 @@ class TestRoomGenerationService(unittest.TestCase):
         self.test_room_generation_service1.generate_room((1,2), 3, 4)
         room = Room((1,2), 3, 4)
         self.assertEqual(self.test_room_generation_service1.rooms[0], room)
+
+    def test_the_correct_amount_of_random_rooms_is_generated(self):
+        self.test_room_generation_service1.generate_random_rooms(10)
+        self.assertEqual(len(self.test_room_generation_service1.rooms), 10)
+        self.test_room_generation_service1.generate_random_rooms(20)
+        self.assertEqual(len(self.test_room_generation_service1.rooms), 30)
