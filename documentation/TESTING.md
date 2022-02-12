@@ -103,3 +103,19 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms
 - When rooms are randomly generated, the amount of rooms is correct
     - Tested by first generating 10 random rooms and checking that the amount of rooms is 10, then generating 20 additional rooms and checking that the amount is 30
+## Performance test results
+**Map:** 100x100    **Room generation attempts:** 100   **Repeats:** 50
+### Initialize map 
+0.02 ms
+### Initialize room generation service
+0.00 ms
+### Generate random rooms
+0.44 ms
+### Initialize maze generation service
+0.96 ms
+### Initialize maze
+0.94 ms
+### Generate a perfect maze
+14.45 ms
+### Connect maze to rooms
+6.14 ms
