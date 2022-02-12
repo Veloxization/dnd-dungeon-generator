@@ -52,3 +52,12 @@ class TestDrawingService(unittest.TestCase):
     def test_get_image_is_called_correctly(self):
         self.test_drawing_service1.get_image()
         self.image_generation_service_mock.get_generated_image.assert_called()
+
+    def test_corridors_are_drawn_in_the_correct_position(self):
+        self.map.occupy(1,1)
+        self.test_drawing_service1.draw_corridors()
+        self.image_generation_service_mock.draw_room.assert_called_with(20, 20, 20, 20)
+        self.map.unoccupy(1,1)
+        self.map.occupy(1,2)
+        self.test_drawing_service1.draw_corridors()
+        self.image_generation_service_mock.draw_room.assert_called_with(20, 40, 20, 20)
