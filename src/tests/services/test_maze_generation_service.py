@@ -160,3 +160,15 @@ class TestMazeGenerationService(unittest.TestCase):
         self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
         maze_gen.connect_maze_to_rooms(1)
         self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
+
+    def test_dead_ends_are_pruned_correctly(self):
+        self.map.occupy(1,1)
+        self.map.occupy(5,1)
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((2,1))
+        self.maze_generation_service._add_passage((3,1))
+        self.maze_generation_service._add_passage((3,2))
+        self.maze_generation_service._add_passage((4,1))
+        self.assertEqual(self.maze_generation_service._maze_cells[3][2], 'p')
+        self.maze_generation_service.prune_dead_ends()
+        self.assertEqual(self.maze_generation_service._maze_cells[3][2], 'w')

@@ -248,10 +248,10 @@ class MazeGenerationService:
                     while stack:
                         source = stack.popleft()
                         if self._map.is_cell_dead_end(source[0], source[1]):
-                            self._maze_cells[source[1]][source[0]] = 'w'
+                            self._maze_cells[source[0]][source[1]] = 'w'
                             self._map.unoccupy(source[0], source[1])
-                        if not visited[source[1]][source[0]]:
-                            visited[source[1]][source[0]] = True
+                        if not visited[source[0]][source[1]]:
+                            visited[source[0]][source[1]] = True
                             for adjacent in self._map.get_adjacent_cells(source[0], source[1]):
                                 if self._map.is_cell_occupied(adjacent[0], adjacent[1]):
                                     stack.appendleft(adjacent)

@@ -102,6 +102,8 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that only one of those connections is used
 - When odds of loops is 1, all possible connections are made
     - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that both of those connections are used
+- Dead ends are pruned from the corridors correctly
+    - Tested by placing 1x1 rooms at coordinates (1,1) and (5,1) and building a corridor in between them, with a small branching dead end in the middle of it, pruning dead ends and checking that the dead end cell is turned into a wall
 ### services/room_generation_service
 - When a room is added, it's correctly added into the list of rooms
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms
