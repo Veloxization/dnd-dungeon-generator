@@ -1,4 +1,5 @@
 import random
+from collections import deque
 from entities.map import Status
 
 class MazeGenerationService:
@@ -233,3 +234,24 @@ class MazeGenerationService:
                 and self._count_adjacent_passages((x_coord, y_coord)) == 0):
                     self._maze_cells[x_coord][y_coord] = 'w'
                     self._map.unoccupy(x_coord, y_coord)
+
+    def prune_dead_ends(self):
+        """Remove dead ends, i.e. cells that have only one neighbouring passage,
+        leaving only winding paths between rooms"""
+        for y_coord in range(self._map.map_height):
+            for x_coord in range(self._map.map_width):
+                if self._maze_cells[x_coord][y_coord] == 'p':
+                    stack = deque()
+                    visited = [[False for x_coord in range(self._map.map_width)]
+                               for y_coord in range(self._map.map_height)]
+                    stack.append((x_coord, y_coord))
+                    while stack:
+                        source = stack.popleft()
+                        if self._map.is_cell_dead_end(source[0], source[1]):
+                            self._maze_cells[source[1]][source[0]] = 'w'
+                            self._map.unoccupy(source[0], source[1])
+                        if not visited[source[1]][source[0]]:
+                            visited[source[1]][source[0]] = True
+                            for adjacent in self._map.get_adjacent_cells(source[0], source[1]):
+                                if self._map.is_cell_occupied(adjacent[0], adjacent[1]):
+                                    stack.appendleft(adjacent)

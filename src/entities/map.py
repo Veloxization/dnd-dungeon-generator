@@ -52,7 +52,7 @@ class Map:
         """
 
         self.cells[(cell_x, cell_y)] = Status.OCCUPIED
-        for cell in self._get_adjacent_cells(cell_x, cell_y):
+        for cell in self.get_adjacent_cells(cell_x, cell_y):
             if cell not in self.cells:
                 self.cells[cell] = Status.ADJACENT_OCCUPIED
             elif self.cells[cell] == Status.UNOCCUPIED:
@@ -88,9 +88,9 @@ class Map:
         """
 
         self.cells[(cell_x, cell_y)] = Status.UNOCCUPIED
-        for cell in self._get_adjacent_cells(cell_x, cell_y):
+        for cell in self.get_adjacent_cells(cell_x, cell_y):
             marked_for_removal = True
-            for sub_cell in self._get_adjacent_cells(cell[0], cell[1]):
+            for sub_cell in self.get_adjacent_cells(cell[0], cell[1]):
                 if sub_cell in self.cells:
                     if self.cells[sub_cell] == Status.OCCUPIED:
                         marked_for_removal = False
@@ -124,7 +124,7 @@ class Map:
 
         return number_of_cells < 2
 
-    def _get_adjacent_cells(self, cell_x, cell_y):
+    def get_adjacent_cells(self, cell_x, cell_y):
         """Get the non-diagonally adjacent cells of a given cell
 
         Args:

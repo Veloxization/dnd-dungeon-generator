@@ -26,6 +26,7 @@ def main():
     maze_gen.init_maze()
     maze_gen.generate_perfect_maze()
     maze_gen.connect_maze_to_rooms(odds_of_loops)
+    maze_gen.prune_dead_ends()
     drawing.draw_corridors()
     drawing.draw_grid()
     MapRepository(drawing.get_image()).save("demo/test")
