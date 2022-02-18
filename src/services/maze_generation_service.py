@@ -237,7 +237,7 @@ class MazeGenerationService:
 
     def prune_dead_ends(self):
         """Remove dead ends, i.e. cells that have only one neighbouring passage,
-        leaving only winding paths between rooms"""
+        leaving only winding paths between rooms. Utilises depth-first search."""
         for y_coord in range(self._map.map_height):
             for x_coord in range(self._map.map_width):
                 if self._maze_cells[x_coord][y_coord] == 'p':
