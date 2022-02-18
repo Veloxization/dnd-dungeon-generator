@@ -16,7 +16,7 @@ def main():
     room_max_width = 10
     room_min_height = 5
     room_max_height = 10
-    odds_of_loops = 0
+    odds_of_loops = 0.05
     map_obj = Map(map_width, map_height)
     room_gen = RoomGenerationService(cell_width, cell_height, map_width, map_height)
     room_gen.generate_random_rooms(rooms_to_generate, room_min_width, room_max_width, room_min_height, room_max_height)

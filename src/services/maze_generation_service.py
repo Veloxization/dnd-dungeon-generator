@@ -92,21 +92,23 @@ class MazeGenerationService:
         connections = self._get_connections()
         if connections:
             rand_connection = random.choice(list(connections.keys()))
-            origin_region = connections[rand_connection][1]
+            added_regions = {connections[rand_connection][0], connections[rand_connection][1]}
             self._map.occupy(rand_connection[0], rand_connection[1])
             self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
             connections.pop(rand_connection)
-            """while connections:
+            while connections:
                 rand_connection = random.choice(list(connections.keys()))
-                if (connections[rand_connection][0] == origin_region
-                and connections[rand_connection][1] == origin_region):
+                if (connections[rand_connection][0] in added_regions
+                and connections[rand_connection][1] in added_regions):
                     if random.random() < odds_of_loops:
                         self._map.occupy(rand_connection[0], rand_connection[1])
                         self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
                 else:
+                    added_regions.add(connections[rand_connection][0])
+                    added_regions.add(connections[rand_connection][1])
                     self._map.occupy(rand_connection[0], rand_connection[1])
                     self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
-                connections.pop(rand_connection)""" # Commented out until issue can be figured out
+                connections.pop(rand_connection)
 
     def _get_connections(self):
         """Find all room-to-room or passage-to-room connections.
