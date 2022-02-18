@@ -22,6 +22,8 @@ O(n) as the generated dungeon will only feature a specified number (width x heig
 [Time complexity of Prim's algorithm](https://en.wikipedia.org/wiki/Prim%27s_algorithm#Time_complexity)
 
 [Maze generation with randomized Prim's algorithm](https://medium.com/swlh/fun-with-python-1-maze-generator-931639b4fb7e)
+
+[Time complexity of DFS](https://www.interviewbit.com/tutorial/depth-first-search/)
 ## Curriculum
 Bachelor's in computer science (Tietojenkäsittelytieteen kandidaatti, TKT)
 ## Language used in documentation
