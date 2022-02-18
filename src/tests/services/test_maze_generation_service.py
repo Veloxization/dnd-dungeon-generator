@@ -125,3 +125,38 @@ class TestMazeGenerationService(unittest.TestCase):
         self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'w')
         self.maze_generation_service.connect_maze_to_rooms()
         self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'p')
+
+    def test_only_one_connection_is_made_if_odds_of_loops_is_zero(self):
+        map_test = Map(6,6)
+        map_test.occupy(2,3)
+        maze_gen = MazeGenerationService(map_test)
+        maze_gen.init_maze()
+        maze_gen._add_passage((2,1))
+        maze_gen._add_passage((3,1))
+        maze_gen._add_passage((4,1))
+        maze_gen._add_passage((4,2))
+        maze_gen._add_passage((4,3))
+        # Map reference:
+        # [['u','u','u','u','u','u'],
+        #  ['u','w','u','w','u','u'],
+        #  ['w','p','w','r','w','u'],
+        #  ['w','p','w','w','u','u'],
+        #  ['w','p','p','p','w','u'],
+        #  ['u','w','w','w','u','u']]
+        self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
+        maze_gen.connect_maze_to_rooms(0)
+        self.assertNotEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
+
+    def test_all_possible_connections_are_made_if_odds_of_loops_is_one(self):
+        map_test = Map(6,6)
+        map_test.occupy(2,3)
+        maze_gen = MazeGenerationService(map_test)
+        maze_gen.init_maze()
+        maze_gen._add_passage((2,1))
+        maze_gen._add_passage((3,1))
+        maze_gen._add_passage((4,1))
+        maze_gen._add_passage((4,2))
+        maze_gen._add_passage((4,3))
+        self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
+        maze_gen.connect_maze_to_rooms(1)
+        self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])

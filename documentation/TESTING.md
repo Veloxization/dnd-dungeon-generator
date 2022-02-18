@@ -98,6 +98,10 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by creating 1x1 rooms at coordinates (1,1), (1,3) and (3,1), then checking the number of valid connections, expecting 2
 - The first connection is drawn correctly
     - Tested by creating 1x1 rooms at coordiantes (1,1) and (1,3), then checking if the cell between them becomes a passage when connections are searched
+- When odds of loops is 0, only one connection to the room is made
+    - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that only one of those connections is used
+- When odds of loops is 1, all possible connections are made
+    - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that both of those connections are used
 ### services/room_generation_service
 - When a room is added, it's correctly added into the list of rooms
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms
