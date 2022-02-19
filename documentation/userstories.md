@@ -22,12 +22,12 @@ The feature has to be developed as specified in this document and have a reasona
 - The program can generate rooms of various sizes **(D)**
 - The program can generate hallways **(D)**
 - The hallways are reasonably connected to the rooms **(D)**
-- The user can specify the size of the dungeon **(S)**
-    - The required GUI element **(S)**
-- The user can specify the likelihood of loops (the "imperfectness" of the maze) **(S)**
-    - The required GUI element **(S)**
-- The user can specify the average size of rooms **(S)**
-    - The required GUI element **(S)**
+- The user can specify the size of the dungeon **(D)**
+    - The required GUI element **(D)**
+- The user can specify the likelihood of loops (the "imperfectness" of the maze) **(D)**
+    - The required GUI element **(D)**
+- The user can specify the average size of rooms **(D)**
+    - The required GUI element **(D)**
 - The program numbers the rooms **(U)**
     - Generated text file with room numbers and empty details **(U)**
 - The user can specify the descriptions of different rooms **(U)**
