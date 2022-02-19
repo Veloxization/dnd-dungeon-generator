@@ -7,9 +7,24 @@ from services.drawing_service import DrawingService
 from repositories.map_repository import MapRepository
 
 class MainGUI:
-    """The main GUI class handling opening of the basic view of the GUI."""
+    """The main GUI class handling opening of the basic view of the GUI.
+
+    Attributes:
+        cell_dimensions: The width and height of a cell in pixels
+        map_width: The width of the map in cells
+        map_height: The height of the map in cells
+        room_min_width: The minimum width of a room in cells
+        room_min_height: The minimum height of a room in cells
+        room_max_width: The maxiumum width of a room in cells
+        room_max_height: The maximum height of a room in cells
+        loop_probability: The probability of loops in the dungeon, 0-1
+        error_message: Whatever system messages need to be displayed
+        error_message_label: The label for the system messages
+    """
 
     def __init__(self):
+        """Create a new MainGUI object"""
+
         root = Tk()
         root.title("D&D Dungeon Generator")
         mainframe = ttk.Frame(root, padding="3 3 12 12")
@@ -129,10 +144,10 @@ class MainGUI:
 
         # ERROR MESSAGES
         self.error_message = StringVar()
-        error_message_label = ttk.Label(errorframe,
+        self.error_message_label = ttk.Label(errorframe,
                                         textvariable=self.error_message,
                                         foreground="red")
-        error_message_label.grid(column=1, row=1)
+        self.error_message_label.grid(column=1, row=1)
 
         for child in mainframe.winfo_children():
             child.grid_configure(padx=5, pady=5)
@@ -165,7 +180,8 @@ class MainGUI:
             odds_of_loops = self.loop_probability.get()
         except TclError as error:
             self.error_message.set(f"Likelihood of loops: {error}")
-        self.error_message.set("")
+        self.error_message_label.config(foreground="black")
+        self.error_message.set("Generating dungeon...")
         self._start_generation(cell_dimensions,
                                map_width,
                                map_height,
@@ -206,4 +222,6 @@ class MainGUI:
         maze_gen.prune_dead_ends()
         drawing.draw_corridors()
         drawing.draw_grid()
-        MapRepository(drawing.get_image()).save("demo/test")
+        MapRepository(drawing.get_image()).save("demo/test") # Temporary, waiting for GUI setting
+        self.error_message_label.config(foreground="green")
+        self.error_message.set("Generated dungeon saved to demo/test.png")
