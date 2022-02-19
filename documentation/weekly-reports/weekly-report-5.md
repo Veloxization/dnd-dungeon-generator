@@ -7,9 +7,9 @@ The usage of Tkinter was relatively easy to understand as I've utilized somethin
 
 On the documentation side, I naturally included the instructions for using the new GUI. I also added a bit more detail to the abandoned implementation document. It still needs a bit more work but it's something!
 
-The program has returned on its previous fast improvement path. The dungeons it generates actually look like dungeons now, and now just a maze in between unattached rooms. Not to mention the GUI, giving the user some sort of control over what kind of dungeon the program generates.
+The program has returned on its previous fast improvement path. The dungeons it generates actually look like dungeons now, and not just a maze in between unattached rooms. Not to mention the GUI, giving the user some sort of control over what kind of dungeon the program generates.
 
-The main thing I learned this week was probably how to use Tkinter. As long as I've been using Python, I seem to have always skirted around building actualy GUIs beyond Pygame. Luckily it was easy to learn and getting started with it offered no trouble.
+The main thing I learned this week was probably how to use Tkinter. As long as I've been using Python, I seem to have always skirted around building actual GUIs beyond Pygame. Luckily it was easy to learn and getting started with it offered no trouble.
 
 That said, the main issue I had this week was also with Tkinter. Since I implemented the slider for the odds of loops in the dungeon, I wanted it to have increments of 0.01. There seems to have been a "resolution" option for sliders (or "Scales" as they're called internally) in some version of Tkinter but that seems to not work anymore, or if it does, I was trying to get it working the wrong way.
 
