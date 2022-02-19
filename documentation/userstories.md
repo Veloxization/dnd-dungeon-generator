@@ -21,13 +21,13 @@ The feature has to be developed as specified in this document and have a reasona
 - The program can generate a movement grid **(D)**
 - The program can generate rooms of various sizes **(D)**
 - The program can generate hallways **(D)**
-- The hallways are reasonably connected to the rooms **(S)**
-- The user can specify the size of the dungeon **(U)**
-    - The required GUI element **(U)**
-- The user can specify the likelihood of loops (the "imperfectness" of the maze) **(U)**
-    - The required GUI element **(U)**
-- The user can specify the average size of rooms **(U)**
-    - The required GUI element **(U)**
+- The hallways are reasonably connected to the rooms **(D)**
+- The user can specify the size of the dungeon **(S)**
+    - The required GUI element **(S)**
+- The user can specify the likelihood of loops (the "imperfectness" of the maze) **(S)**
+    - The required GUI element **(S)**
+- The user can specify the average size of rooms **(S)**
+    - The required GUI element **(S)**
 - The program numbers the rooms **(U)**
     - Generated text file with room numbers and empty details **(U)**
 - The user can specify the descriptions of different rooms **(U)**
