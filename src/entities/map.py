@@ -45,6 +45,8 @@ class Map:
     def occupy(self, cell_x, cell_y):
         """Occupy a cell, called when a room or a corridor is added.
         Also handles assigning cells to their regions.
+        If two regions get connected, the region with the larger ID
+        becomes part of the region with the smaller ID.
 
         Args:
             cell_x: The x coordinate of the cell to occupy

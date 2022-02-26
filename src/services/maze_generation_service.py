@@ -77,8 +77,6 @@ class MazeGenerationService:
 
             starting_point = self._find_starting_point()
 
-        self._prune_disattached_cells()
-
     def connect_maze_to_rooms(self, odds_of_loops=0.5):
         """Connect passage cells to room cells, or rooms to other rooms
 
@@ -110,6 +108,12 @@ class MazeGenerationService:
                     self._map.occupy(rand_connection[0], rand_connection[1])
                     self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
                 connections.pop(rand_connection)
+            # Brute force solution to remaining unconnected regions
+            connections = self._get_connections()
+            for connection in list(connections.keys()):
+                if connections[connection][0] != connections[connection][1]:
+                    self._map.occupy(rand_connection[0], rand_connection[1])
+                    self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
 
     def _get_connections(self):
         """Find all room-to-room or passage-to-room connections.
@@ -224,16 +228,6 @@ class MazeGenerationService:
                     return (x_coord, y_coord)
 
         return None
-
-    def _prune_disattached_cells(self): # pragma: no cover
-        """Remove passage cells that have no passage neighbours"""
-
-        for y_coord in range(self._map.map_height):
-            for x_coord in range(self._map.map_width):
-                if (self._maze_cells[x_coord][y_coord] == 'p'
-                and self._count_adjacent_passages((x_coord, y_coord)) == 0):
-                    self._maze_cells[x_coord][y_coord] = 'w'
-                    self._map.unoccupy(x_coord, y_coord)
 
     def prune_dead_ends(self):
         """Remove dead ends, i.e. cells that have only one neighbouring passage,
