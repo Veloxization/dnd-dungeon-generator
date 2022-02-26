@@ -31,10 +31,12 @@ class MainGUI:
         mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         scaleframe = ttk.Frame(root, padding="3 3 12 12")
         scaleframe.grid(column=0, row=1, sticky=(N, W, E, S))
+        filenameframe = ttk.Frame(root, padding="3 3 12 12")
+        filenameframe.grid(column=0, row=2, sticky=(N, W, E, S))
         buttonframe = ttk.Frame(root, padding="3 3 12 12")
-        buttonframe.grid(column=0, row=2)
+        buttonframe.grid(column=0, row=3)
         errorframe = ttk.Frame(root, padding="3 3 12 12")
-        errorframe.grid(column=0, row=3)
+        errorframe.grid(column=0, row=4)
         root.columnconfigure(0, weight=1)
         root.rowconfigure(0, weight=1)
 
@@ -93,6 +95,12 @@ class MainGUI:
                                            variable=self.loop_probability)
         loop_probability_scale.grid(column=3, row=1, sticky=(W, E))
 
+        self.file_name = StringVar(value="map")
+        file_name_entry = ttk.Entry(filenameframe,
+                                    width=7,
+                                    textvariable=self.file_name)
+        file_name_entry.grid(column=2, row=1, sticky=(W, E))
+
         # ENTRY LABELS
         cell_dimensions_label = ttk.Label(mainframe, text="Square width and height")
         cell_dimensions_label.grid(column=1, row=1)
@@ -111,6 +119,9 @@ class MainGUI:
 
         loop_probability_label = ttk.Label(scaleframe, text="Likelihood of loops")
         loop_probability_label.grid(column=1, row=1)
+
+        file_name_label = ttk.Label(filenameframe, text="Map file name")
+        file_name_label.grid(column=1, row=1)
 
         # DIVIDER LABELS
         map_dimensions_divider = ttk.Label(mainframe, text="x")
@@ -140,6 +151,9 @@ class MainGUI:
 
         loop_probability_unit_right = ttk.Label(scaleframe, text="All")
         loop_probability_unit_right.grid(column=4, row=1)
+
+        file_extension = ttk.Label(filenameframe, text=".png")
+        file_extension.grid(column=3, row=1)
 
         # SCALE VALUES
         loop_probability_value = ttk.Label(scaleframe, textvariable=self.loop_probability)
@@ -243,6 +257,13 @@ class MainGUI:
         maze_gen.prune_dead_ends()
         drawing.draw_corridors()
         drawing.draw_grid()
-        MapRepository(drawing.get_image()).save("demo/test") # Temporary, waiting for GUI setting
-        self.error_message_label.config(foreground="green")
-        self.error_message.set("Generated dungeon saved to demo/test.png")
+        err = False
+        try:
+            MapRepository(drawing.get_image()).save(f"demo/{self.file_name.get()}")
+        except OSError as error:
+            self.error_message_label.config(foreground="red")
+            self.error_message.set(f"Map file name: {error}")
+            err = True
+        if not err:
+            self.error_message_label.config(foreground="green")
+            self.error_message.set(f"Generated dungeon saved to demo/{self.file_name.get()}.png")
