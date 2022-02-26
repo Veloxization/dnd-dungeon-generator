@@ -11,4 +11,6 @@
 8. All dead ends of the maze are pruned utilizing depth-first search, leaving winding corridors between the different rooms
 9. The added corridors are drawn on the graphical representation of the map
 10. A grid is drawn on top of the graphical representation of the map to make it easier to navigate in a tabletop setting
-11. The generated graphical representation is saved as a PNG image
+11. Numbers are placed in the top left corner of the rooms in order of generation
+12. The generated graphical representation is saved as a PNG image
+13. The Game Master's document is saved as a text file alongside the image
