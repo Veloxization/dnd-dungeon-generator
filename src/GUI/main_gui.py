@@ -257,6 +257,7 @@ class MainGUI:
         maze_gen.prune_dead_ends()
         drawing.draw_corridors()
         drawing.draw_grid()
+        drawing.draw_room_numbers()
         err = False
         try:
             MapRepository(drawing.get_image()).save(f"demo/{self.file_name.get()}")

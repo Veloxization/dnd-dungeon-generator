@@ -65,9 +65,22 @@ class DrawingService:
                                                  self._cell_size[1],
                                                  line_thickness)
 
+    def draw_room_numbers(self):
+        """Draw the numbers of the rooms in their top left corners"""
+
+        room_num = 1
+        font_size = self._cell_size[1]
+        for room in self._room_generation_service.rooms:
+            if room.is_generated:
+                self._image_generation_service.draw_text(str(room_num),
+                                                         room.coordinates[0] * self._cell_size[0],
+                                                         room.coordinates[1] * self._cell_size[1],
+                                                         font_size)
+                room_num += 1
+
     def get_image(self):
         """Get the image object from the ImageGenerationService
-        
+
         Returns: The generated image object
         """
 

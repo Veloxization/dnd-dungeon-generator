@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 class ImageGenerationService:
     """A class responsible for generating the actual image of the dungeon
@@ -23,6 +23,7 @@ class ImageGenerationService:
         self.image = Image.new("RGBA", (map_width, map_height), color=(0,0,0,255))
         self.room_image = Image.new("RGBA", (self._map_width, self._map_height), color=(0,0,0,0))
         self.grid_image = Image.new("RGBA", (self._map_width, self._map_height), color=(0,0,0,0))
+        self.text_image = Image.new("RGBA", (self._map_width, self._map_height), color=(0,0,0,0))
 
     def draw_room(self, room_position_x=0, room_position_y=0, room_width=100, room_height=100):
         """Draws a room of specified dimensions and position
@@ -68,6 +69,20 @@ class ImageGenerationService:
             current_coordinate += cell_height
         self.image.alpha_composite(self.grid_image)
 
+    def draw_text(self, text, pos_x, pos_y, font_size):
+        """Draw text at the specified coordinates with the specified font size
+
+        Args:
+            text: The text to write
+            pos_x: The x-coordinate of where the text is placed
+            pos_y: The y-coordinate of where the text is placed
+            font_size: The font size of the text in pixels
+        """
+
+        image_draw = ImageDraw.Draw(self.text_image)
+        font = ImageFont.truetype("fonts/arial.ttf", font_size)
+        image_draw.text((pos_x, pos_y), text, fill=(255,255,255), font=font)
+
     def get_generated_image(self):
         """Get the generated image
 
@@ -77,4 +92,5 @@ class ImageGenerationService:
 
         self.image.alpha_composite(self.room_image)
         self.image.alpha_composite(self.grid_image)
+        self.image.alpha_composite(self.text_image)
         return self.image
