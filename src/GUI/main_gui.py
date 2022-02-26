@@ -4,7 +4,9 @@ from entities.map import Map
 from services.room_generation_service import RoomGenerationService
 from services.maze_generation_service import MazeGenerationService
 from services.drawing_service import DrawingService
+from services.room_data_generation_service import RoomDataGenerationService
 from repositories.map_repository import MapRepository
+from repositories.gm_document_repository import GMDocumentRepository
 
 class MainGUI:
     """The main GUI class handling opening of the basic view of the GUI.
@@ -268,3 +270,7 @@ class MainGUI:
         if not err:
             self.error_message_label.config(foreground="green")
             self.error_message.set(f"Generated dungeon saved to demo/{self.file_name.get()}.png")
+        data_gen = RoomDataGenerationService(room_gen)
+        data_gen.init_data()
+        doc_repo = GMDocumentRepository(self.file_name.get())
+        doc_repo.write_data(data_gen.print_data(self.file_name.get()))

@@ -115,6 +115,21 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by generating a room in coordinates (1,2) with the width of 3 and height of 4, and checking that it's added to a list of rooms
 - When rooms are randomly generated, the amount of rooms is correct
     - Tested by first generating 10 random rooms and checking that the amount of rooms is 10, then generating 20 additional rooms and checking that the amount is 30
+### services/room_data_generation_service
+- If there are no rooms on the map, the list of placed rooms remains empty
+    - Tested by initializing a room data generation service object and not adding any rooms to the attributed room generation service object
+- If there is a single generated room, it is added to the list of placed rooms
+    - Tested by adding a single room marked as generated in the attributed room generation service object and checking that the list of placed rooms has a single object
+- If there are rooms but none of them are generated, they will not become placed rooms
+    - Tested by adding a single room marked as not generated and checking that the number of placed rooms remains at 0
+- If there are no rooms on the map, no data will appear
+    - Tested by not adding any rooms and checking that the amount of data on the data list is 0
+- A placed room has its number displayed correctly
+    - Tested by placing a single room and checking that its associated data displays the number 1
+- If data is empty, the string presentation is formatted correctly
+    - Tested by printing the empty data and checking that it only contains the name, the text "GM Document" and ends with two line breaks
+- If there is a single room, it appears in the string presentation of the data correctly
+    - Tested by placing a single room and checking that the string representation of the data includes the text for "Room 1"
 ## Performance test results
 **Map:** 100x100    **Room generation attempts:** 100   **Repeats:** 50
 ### Initialize map 
