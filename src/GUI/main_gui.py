@@ -78,6 +78,12 @@ class MainGUI:
                                           textvariable=self.room_max_height)
         room_max_height_entry.grid(column=4, row=4, sticky=(W, E))
 
+        self.room_generation_attempts = IntVar(value=100)
+        room_generation_attempts_entry = ttk.Entry(mainframe,
+                                                   width=7,
+                                                   textvariable=self.room_generation_attempts)
+        room_generation_attempts_entry.grid(column=2, row=5, sticky=(W, E))
+
         self.loop_probability = DoubleVar(value=0.50)
         loop_probability_scale = ttk.Scale(scaleframe,
                                            orient=HORIZONTAL,
@@ -99,6 +105,9 @@ class MainGUI:
 
         room_max_dimensions_label = ttk.Label(mainframe, text="Room max dimensions")
         room_max_dimensions_label.grid(column=1, row=4)
+
+        room_generation_attempts_label = ttk.Label(mainframe, text="Room generation attempts")
+        room_generation_attempts_label.grid(column=1, row=5)
 
         loop_probability_label = ttk.Label(scaleframe, text="Likelihood of loops")
         loop_probability_label.grid(column=1, row=1)
@@ -157,40 +166,52 @@ class MainGUI:
 
     def validate_and_start(self):
         """Validate user inputs and start if they're correct"""
+        err = False
         try:
             cell_dimensions = self.cell_dimensions.get()
         except TclError as error:
             self.error_message.set(f"Square width and height: {error}")
+            err = True
         try:
             map_width = self.map_width.get()
             map_height = self.map_height.get()
         except TclError as error:
             self.error_message.set(f"Map dimensions: {error}")
+            err = True
         try:
             room_min_width = self.room_min_width.get()
             room_min_height = self.room_min_height.get()
         except TclError as error:
             self.error_message.set(f"Room min dimensions: {error}")
+            err = True
         try:
             room_max_width = self.room_max_width.get()
             room_max_height = self.room_max_height.get()
         except TclError as error:
             self.error_message.set(f"Room max dimensions: {error}")
+            err = True
+        try:
+            room_generation_attempts = self.room_generation_attempts.get()
+        except TclError as error:
+            self.error_message.set(f"Room generation attempts: {error}")
+            err = True
         try:
             odds_of_loops = self.loop_probability.get()
         except TclError as error:
             self.error_message.set(f"Likelihood of loops: {error}")
-        self.error_message_label.config(foreground="black")
-        self.error_message.set("Generating dungeon...")
-        self._start_generation(cell_dimensions,
-                               map_width,
-                               map_height,
-                               room_min_width,
-                               room_min_height,
-                               room_max_width,
-                               room_max_height,
-                               100, # Temporary, waiting for the GUI setting
-                               odds_of_loops)
+            err = True
+        if not err:
+            self.error_message_label.config(foreground="black")
+            self.error_message.set("Generating dungeon...")
+            self._start_generation(cell_dimensions,
+                                map_width,
+                                map_height,
+                                room_min_width,
+                                room_min_height,
+                                room_max_width,
+                                room_max_height,
+                                room_generation_attempts,
+                                odds_of_loops)
 
     def _start_generation(self, cell_dim, map_w, map_h, room_min_w, room_min_h, room_max_w, room_max_h, room_gen_attempts, loop_odds):
         """Start the generation of the dungeon
