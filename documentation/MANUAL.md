@@ -28,7 +28,11 @@ The width and height of the map in squares
 The minimum width and height a single room on the map can take, in squares
 ### Room max dimensions
 The maximum width and height a single room on the map can take, in squares
+### Room generation attempts
+How many rooms of random sizes and locations the program will try to generate. A higher number generally means a larger portion of the generated map will be occupied by rooms compared to corridors.
 ### Likelihood of loops
 How likely is it that the generated dungeon contains loops. A likelihood of "None" means that there is only one way to move between two rooms, while a likelihood of "All" means all possible entrances to the room will be created.
+### Map file name
+The name of the generated map file. A text document of matching name will also be generated. The text document will contain the information of different rooms.
 ### Generate dungeon button
 Once you are happy with the settings, pressing this button will start the room generation. If you made any errors in the values you entered earlier, the program will tell about them now. The program may seem unresponsive during generation and will inform you once it's done.
