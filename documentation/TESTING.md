@@ -63,6 +63,12 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by checking that a mock object's generated image getter function is called
 - Corridors are placed in the correct spots on the map image
     - Tested by first checking that a corridor drawn to coordinates (1,1) called an image generation service mock object for coordinates (20, 20) and coordinates (1,2) for (20,40)
+- Room numbers are placed in the correct spots on the map image
+    - Tested by creating a 2x2 room at coordinates (2,3) with a cell size of 20x20, and checking that image generation service's mock object is called with coordinates 2\*20=40, 3\*20=60 and with a font size of 20, and that the drawn text is "1"
+- If only one of the generated rooms is valid, only one number will be drawn
+    - Tested by creating 2x2 rooms at coordinates (1,1) and (1,2) so they would overlap. Then checking that image generation service's mock object's draw_text function is called only once
+- The amount of numbers matches the number of rooms generated
+    - Tested by placing two valid rooms at coordinates (1,1) and (3,3) and then checking that the latest call to image generation service's mock object happens with the drawn text of "2"
 ### services/maze_generation_service
 - When a maze is initialized, the rooms added on the map will appear in the maze surrounded by walls
     - Tested by checking that a room generated at coordinates (1,1) will also be marked at coordinates (1,1) and all the adjacent cells are marked as walls

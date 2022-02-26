@@ -61,3 +61,23 @@ class TestDrawingService(unittest.TestCase):
         self.map.occupy(1,2)
         self.test_drawing_service1.draw_corridors()
         self.image_generation_service_mock.draw_room.assert_called_with(20, 40, 20, 20)
+
+    def test_room_number_is_drawn_in_the_correct_position(self):
+        self.room_generation_service.generate_room((2,3))
+        self.test_drawing_service1.draw_rooms()
+        self.test_drawing_service1.draw_room_numbers()
+        self.image_generation_service_mock.draw_text.assert_called_with("1", 40, 60, 20)
+
+    def test_correct_amount_of_numbers_is_drawn_if_only_one_room_is_valid(self):
+        self.room_generation_service.generate_room((1,1))
+        self.room_generation_service.generate_room((1,2))
+        self.test_drawing_service1.draw_rooms()
+        self.test_drawing_service1.draw_room_numbers()
+        self.image_generation_service_mock.draw_text.assert_called_once()
+
+    def test_amount_of_numbers_matches_the_amount_of_rooms(self):
+        self.room_generation_service.generate_room((1,1))
+        self.room_generation_service.generate_room((3,3))
+        self.test_drawing_service1.draw_rooms()
+        self.test_drawing_service1.draw_room_numbers()
+        self.image_generation_service_mock.draw_text.assert_called_with("2", 60, 60, 20)
