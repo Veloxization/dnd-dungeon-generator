@@ -29,6 +29,7 @@ class DrawingService:
     def draw_rooms(self):
         """Draw the generated rooms on the map, if possible"""
 
+        region_id = 0
         for room in self._room_generation_service.rooms:
             if self._can_draw_room(room):
                 room.toggle_generated()
@@ -40,6 +41,12 @@ class DrawingService:
                 for y_coord in range(room.coordinates[1], room.coordinates[1] + room.height):
                     for x_coord in range(room.coordinates[0], room.coordinates[0] + room.width):
                         self._map.occupy(x_coord, y_coord)
+                        if region_id not in self._map.regions:
+                            self._map.regions[region_id] = [(x_coord, y_coord)]
+                        else:
+                            self._map.regions[region_id].append((x_coord, y_coord))
+                        self._map.cell_regions[(x_coord, y_coord)] = region_id
+                region_id += 1
 
     def draw_corridors(self):
         """Draw the generated corridors on the map"""

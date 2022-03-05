@@ -14,7 +14,7 @@ def main():
 
 def performance_test():
     """Measure the program's performance
-    
+
     Returns: String containing the results of the performance test"""
     cell_width = 5
     cell_height = 5

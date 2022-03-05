@@ -33,7 +33,7 @@ class TestMazeGenerationService(unittest.TestCase):
         self.assertEqual(self.maze_generation_service._maze_cells[2][1], 'u')
         self.assertEqual(self.maze_generation_service._maze_cells[1][0], 'u')
         self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'u')
-        self.maze_generation_service._add_passage((1,1))
+        self.maze_generation_service._add_passage((1,1), 1)
         self.assertEqual(self.maze_generation_service._maze_cells[1][1], 'p')
         self.assertEqual(self.maze_generation_service._maze_cells[0][1], 'w')
         self.assertEqual(self.maze_generation_service._maze_cells[2][1], 'w')
@@ -41,7 +41,7 @@ class TestMazeGenerationService(unittest.TestCase):
         self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'w')
 
     def test_passages_cannot_be_replaced_by_walls(self):
-        self.maze_generation_service._add_passage((1,1))
+        self.maze_generation_service._add_passage((1,1), 1)
         self.maze_generation_service._add_wall((1,1))
         self.assertEqual(self.maze_generation_service._maze_cells[1][1], 'p')
 
@@ -49,19 +49,19 @@ class TestMazeGenerationService(unittest.TestCase):
         self.maze_generation_service._add_wall((1,1))
         self.assertEqual(len(self.maze_generation_service._walls), 1)
         self.assertEqual(self.maze_generation_service._maze_cells[1][1], 'w')
-        self.maze_generation_service._add_passage((1,1))
+        self.maze_generation_service._add_passage((1,1), 1)
         self.assertNotEqual(len(self.maze_generation_service._walls), 1)
         self.assertEqual(self.maze_generation_service._maze_cells[1][1], 'p')
 
     def test_adjacent_passages_are_correctly_counted(self):
         self.assertEqual(self.maze_generation_service._count_adjacent_passages((1,1)), 0)
-        self.maze_generation_service._add_passage((0,1))
+        self.maze_generation_service._add_passage((0,1), 1)
         self.assertEqual(self.maze_generation_service._count_adjacent_passages((1,1)), 1)
-        self.maze_generation_service._add_passage((2,1))
+        self.maze_generation_service._add_passage((2,1), 1)
         self.assertEqual(self.maze_generation_service._count_adjacent_passages((1,1)), 2)
-        self.maze_generation_service._add_passage((1,0))
+        self.maze_generation_service._add_passage((1,0), 1)
         self.assertEqual(self.maze_generation_service._count_adjacent_passages((1,1)), 3)
-        self.maze_generation_service._add_passage((1,2))
+        self.maze_generation_service._add_passage((1,2), 1)
         self.assertEqual(self.maze_generation_service._count_adjacent_passages((1,1)), 4)
 
     def test_first_available_unvisited_cell_is_found(self):
@@ -79,27 +79,35 @@ class TestMazeGenerationService(unittest.TestCase):
 
     def test_a_passage_on_the_left_is_connected_to_a_room_on_the_right(self):
         self.map.occupy(3,3)
+        self.map.cell_regions[(3,3)] = 1
+        self.map.regions[1] = [(3,3)]
         self.maze_generation_service.init_maze()
-        self.maze_generation_service._add_passage((1,3))
-        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (1,0))
+        self.maze_generation_service._add_passage((1,3), 2)
+        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (2,1))
 
     def test_a_passage_on_the_right_is_connected_to_a_room_on_the_left(self):
         self.map.occupy(1,3)
+        self.map.cell_regions[(1,3)] = 1
+        self.map.regions[1] = [(1,3)]
         self.maze_generation_service.init_maze()
-        self.maze_generation_service._add_passage((3,3))
-        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (1,0))
+        self.maze_generation_service._add_passage((3,3), 2)
+        self.assertEqual(self.maze_generation_service._get_connection((2,3)), (2,1))
 
     def test_a_passage_above_is_connected_to_a_room_below(self):
         self.map.occupy(3,3)
+        self.map.cell_regions[(3,3)] = 1
+        self.map.regions[1] = [(3,3)]
         self.maze_generation_service.init_maze()
-        self.maze_generation_service._add_passage((3,1))
-        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (1,0))
+        self.maze_generation_service._add_passage((3,1), 2)
+        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (2,1))
 
     def test_a_passage_below_is_connected_to_a_room_above(self):
         self.map.occupy(3,1)
+        self.map.cell_regions[(3,1)] = 1
+        self.map.regions[1] = [(3,1)]
         self.maze_generation_service.init_maze()
-        self.maze_generation_service._add_passage((3,3))
-        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (1,0))
+        self.maze_generation_service._add_passage((3,3), 2)
+        self.assertEqual(self.maze_generation_service._get_connection((3,2)), (2,1))
 
     def test_non_walls_are_not_considered_connections(self):
         self.maze_generation_service.init_maze()
@@ -113,14 +121,24 @@ class TestMazeGenerationService(unittest.TestCase):
 
     def test_the_correct_number_of_connections_is_established(self):
         self.map.occupy(1,1)
+        self.map.cell_regions[(1,1)] = 1
+        self.map.regions[1] = [(1,1)]
         self.map.occupy(1,3)
+        self.map.cell_regions[(1,3)] = 2
+        self.map.regions[2] = [(1,3)]
         self.map.occupy(3,1)
+        self.map.cell_regions[(3,1)] = 3
+        self.map.regions[3] = [(3,1)]
         self.maze_generation_service.init_maze()
         self.assertEqual(len(self.maze_generation_service._get_connections()), 2)
 
     def test_initial_connection_is_correctly_drawn(self):
         self.map.occupy(1,1)
+        self.map.cell_regions[(1,1)] = 1
+        self.map.regions[1] = [(1,1)]
         self.map.occupy(1,3)
+        self.map.cell_regions[(1,3)] = 2
+        self.map.regions[2] = [(1,3)]
         self.maze_generation_service.init_maze()
         self.assertEqual(self.maze_generation_service._maze_cells[1][2], 'w')
         self.maze_generation_service.connect_maze_to_rooms()
@@ -129,13 +147,15 @@ class TestMazeGenerationService(unittest.TestCase):
     def test_only_one_connection_is_made_if_odds_of_loops_is_zero(self):
         map_test = Map(6,6)
         map_test.occupy(2,3)
+        map_test.cell_regions[(2,3)] = 1
+        map_test.regions[1] = [(2,3)]
         maze_gen = MazeGenerationService(map_test)
         maze_gen.init_maze()
-        maze_gen._add_passage((2,1))
-        maze_gen._add_passage((3,1))
-        maze_gen._add_passage((4,1))
-        maze_gen._add_passage((4,2))
-        maze_gen._add_passage((4,3))
+        maze_gen._add_passage((2,1), 2)
+        maze_gen._add_passage((3,1), 2)
+        maze_gen._add_passage((4,1), 2)
+        maze_gen._add_passage((4,2), 2)
+        maze_gen._add_passage((4,3), 2)
         # Map reference:
         # [['u','u','u','u','u','u'],
         #  ['u','w','u','w','u','u'],
@@ -150,25 +170,53 @@ class TestMazeGenerationService(unittest.TestCase):
     def test_all_possible_connections_are_made_if_odds_of_loops_is_one(self):
         map_test = Map(6,6)
         map_test.occupy(2,3)
+        map_test.cell_regions[(2,3)] = 1
+        map_test.regions[1] = [(2,3)]
         maze_gen = MazeGenerationService(map_test)
         maze_gen.init_maze()
-        maze_gen._add_passage((2,1))
-        maze_gen._add_passage((3,1))
-        maze_gen._add_passage((4,1))
-        maze_gen._add_passage((4,2))
-        maze_gen._add_passage((4,3))
+        maze_gen._add_passage((2,1), 2)
+        maze_gen._add_passage((3,1), 2)
+        maze_gen._add_passage((4,1), 2)
+        maze_gen._add_passage((4,2), 2)
+        maze_gen._add_passage((4,3), 2)
         self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
         maze_gen.connect_maze_to_rooms(1)
         self.assertEqual(maze_gen._maze_cells[2][2], maze_gen._maze_cells[3][3])
 
+    def test_in_case_of_two_possible_connections_between_rooms_only_one_is_used_when_odds_of_loops_is_zero(self):
+        self.map.occupy(1,1)
+        self.map.regions[1] = [(1,1)]
+        self.map.cell_regions[(1,1)] = 1
+        self.map.occupy(1,3)
+        self.map.regions[2] = [(1,3)]
+        self.map.cell_regions[(1,3)] = 2
+        self.maze_generation_service.init_maze()
+        self.maze_generation_service._add_passage((3,1), 3)
+        self.maze_generation_service._add_passage((3,2), 3)
+        self.maze_generation_service._add_passage((3,3), 3)
+        self.assertEqual(len(self.maze_generation_service._get_connections()), 3)
+        self.maze_generation_service.connect_maze_to_rooms(0)
+        added_passages = 0
+        if self.maze_generation_service._maze_cells[2][1] == 'p':
+            added_passages += 1
+        if self.maze_generation_service._maze_cells[2][3] == 'p':
+            added_passages += 1
+        if self.maze_generation_service._maze_cells[1][2] == 'p':
+            added_passages += 1
+        self.assertNotEqual(added_passages, 3)
+
     def test_dead_ends_are_pruned_correctly(self):
         self.map.occupy(1,1)
+        self.map.cell_regions[(1,1)] = 1
+        self.map.regions[1] = [(1,1)]
         self.map.occupy(5,1)
+        self.map.cell_regions[(5,1)] = 2
+        self.map.regions[2] = [(5,1)]
         self.maze_generation_service.init_maze()
-        self.maze_generation_service._add_passage((2,1))
-        self.maze_generation_service._add_passage((3,1))
-        self.maze_generation_service._add_passage((3,2))
-        self.maze_generation_service._add_passage((4,1))
+        self.maze_generation_service._add_passage((2,1), 3)
+        self.maze_generation_service._add_passage((3,1), 3)
+        self.maze_generation_service._add_passage((3,2), 3)
+        self.maze_generation_service._add_passage((4,1), 3)
         self.assertEqual(self.maze_generation_service._maze_cells[3][2], 'p')
         self.maze_generation_service.prune_dead_ends()
         self.assertEqual(self.maze_generation_service._maze_cells[3][2], 'w')

@@ -79,35 +79,3 @@ class TestMap(unittest.TestCase):
         self.assertEqual(self.test_map1.cells[(2,1)], Status.UNOCCUPIED)
         self.assertEqual(self.test_map1.cells[(1,0)], Status.UNOCCUPIED)
         self.assertEqual(self.test_map1.cells[(1,2)], Status.UNOCCUPIED)
-
-    def test_occupying_separate_cells_puts_them_in_their_own_regions(self):
-        self.test_map1.occupy(1,1)
-        self.test_map1.occupy(3,3)
-        self.assertTrue((1,1) in self.test_map1.regions[0])
-        self.assertTrue((3,3) in self.test_map1.regions[1])
-
-    def test_occupying_adjacent_cells_puts_them_in_the_same_region(self):
-        self.test_map1.occupy(1,1)
-        self.test_map1.occupy(1,2)
-        self.assertTrue((1,1) in self.test_map1.regions[0])
-        self.assertTrue((1,2) in self.test_map1.regions[0])
-
-    def test_unoccupying_a_cell_also_removes_it_from_its_region(self):
-        self.test_map1.occupy(1,1)
-        self.test_map1.occupy(1,2)
-        self.assertTrue((1,1) in self.test_map1.regions[0])
-        self.test_map1.unoccupy(1,1)
-        self.assertFalse((1,1) in self.test_map1.regions[0])
-
-    def test_if_two_regions_are_combined_they_will_become_the_region_with_the_smallest_id(self):
-        self.test_map1.occupy(1,1)
-        self.test_map1.occupy(1,3)
-        self.test_map1.occupy(1,4)
-        self.test_map1.occupy(2,4)
-        self.assertEqual(self.test_map1.cell_regions[(1,3)], 1)
-        self.assertEqual(self.test_map1.cell_regions[(1,4)], 1)
-        self.assertEqual(self.test_map1.cell_regions[(2,4)], 1)
-        self.test_map1.occupy(1,2)
-        self.assertEqual(self.test_map1.cell_regions[(1,3)], 0)
-        self.assertEqual(self.test_map1.cell_regions[(1,4)], 0)
-        self.assertEqual(self.test_map1.cell_regions[(2,4)], 0)

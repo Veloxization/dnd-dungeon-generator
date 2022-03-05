@@ -11,6 +11,7 @@ class MazeGenerationService:
         (u)nvisited, (r)oom, (w)all and (p)assage.
         Initially all cells are unvisited.
         walls: A list containing the locations of the walls generated so far
+        A dictionary with a coordinate tuple (x, y) as a key and region id as value
     """
 
     def __init__(self, map_object):
@@ -44,8 +45,9 @@ class MazeGenerationService:
         A maze is perfect if it does not have any loops."""
 
         starting_point = self._find_starting_point()
+        maze_region_id = len(self._map.regions)
         while starting_point is not None:
-            self._add_passage((starting_point[0], starting_point[1]))
+            self._add_passage((starting_point[0], starting_point[1]), maze_region_id)
 
             while self._walls:
                 rand_wall = random.choice(self._walls)
@@ -53,32 +55,36 @@ class MazeGenerationService:
                     if (self._maze_cells[rand_wall[0]][rand_wall[1] + 1] in ('u', 'w')
                     and self._maze_cells[rand_wall[0]][rand_wall[1] - 1] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
-                            self._add_passage(rand_wall)
+                            self._add_passage(rand_wall, maze_region_id)
                             continue
                 if rand_wall[0] + 1 < self._map.map_width:
                     if (self._maze_cells[rand_wall[0] + 1][rand_wall[1]] in ('u', 'w')
                     and self._maze_cells[rand_wall[0] - 1][rand_wall[1]] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
-                            self._add_passage(rand_wall)
+                            self._add_passage(rand_wall, maze_region_id)
                             continue
                 if rand_wall[1] - 1 >= 0:
                     if (self._maze_cells[rand_wall[0]][rand_wall[1] - 1] in ('u', 'w')
                     and self._maze_cells[rand_wall[0]][rand_wall[1] + 1] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
-                            self._add_passage(rand_wall)
+                            self._add_passage(rand_wall, maze_region_id)
                             continue
                 if rand_wall[0] - 1 >= 0:
                     if (self._maze_cells[rand_wall[0] - 1][rand_wall[1]] in ('u', 'w')
                     and self._maze_cells[rand_wall[0] + 1][rand_wall[1]] == 'p'):
                         if self._count_adjacent_passages(rand_wall) < 2:
-                            self._add_passage(rand_wall)
+                            self._add_passage(rand_wall, maze_region_id)
                             continue
                 self._walls.remove(rand_wall)
 
             starting_point = self._find_starting_point()
+            maze_region_id += 1
 
     def connect_maze_to_rooms(self, odds_of_loops=0.5):
-        """Connect passage cells to room cells, or rooms to other rooms
+        """Connect passage cells to room cells, or rooms to other rooms.
+        The method keeps track of which regions are already connected
+        and will only apply a connection between those two regions if
+        a pseudo-random number is less than odds_of_loops.
 
         Args:
             odds_of_loops: The odds of the dungeon having loops, between 0 and 1
@@ -88,32 +94,53 @@ class MazeGenerationService:
             odds_of_loops = 0
         elif odds_of_loops > 1: # pragma: no cover
             odds_of_loops = 1
-        connections = self._get_connections()
-        if connections:
-            rand_connection = random.choice(list(connections.keys()))
-            added_regions = {connections[rand_connection][0], connections[rand_connection][1]}
-            self._map.occupy(rand_connection[0], rand_connection[1])
-            self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
-            connections.pop(rand_connection)
-            while connections:
-                rand_connection = random.choice(list(connections.keys()))
-                if (connections[rand_connection][0] in added_regions
-                and connections[rand_connection][1] in added_regions):
-                    if random.random() < odds_of_loops:
-                        self._map.occupy(rand_connection[0], rand_connection[1])
-                        self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
-                else:
-                    added_regions.add(connections[rand_connection][0])
-                    added_regions.add(connections[rand_connection][1])
-                    self._map.occupy(rand_connection[0], rand_connection[1])
-                    self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
-                connections.pop(rand_connection)
-            # Brute force solution to remaining unconnected regions
-            connections = self._get_connections()
-            for connection in list(connections.keys()):
-                if connections[connection][0] != connections[connection][1]:
-                    self._map.occupy(rand_connection[0], rand_connection[1])
-                    self._maze_cells[rand_connection[0]][rand_connection[1]] = 'p'
+        conns = self._get_connections()
+        if conns:
+            rand_conn = random.choice(list(conns.keys()))
+            region_conns = {
+                                conns[rand_conn][0]: {conns[rand_conn][0], conns[rand_conn][1]},
+                                conns[rand_conn][1]: {conns[rand_conn][1], conns[rand_conn][0]}
+                           }
+            self._map.occupy(rand_conn[0], rand_conn[1])
+            self._maze_cells[rand_conn[0]][rand_conn[1]] = 'p'
+            conns.pop(rand_conn)
+            while conns:
+                rand_conn = random.choice(list(conns.keys()))
+                if conns[rand_conn][0] not in region_conns:
+                    region_conns[conns[rand_conn][0]] = {conns[rand_conn][0]}
+                if conns[rand_conn][1] not in region_conns:
+                    region_conns[conns[rand_conn][1]] = {conns[rand_conn][1]}
+                can_reach = self._can_reach(region_conns, conns[rand_conn][0], conns[rand_conn][1])
+                if (can_reach and random.random() < odds_of_loops):
+                    self._map.occupy(rand_conn[0], rand_conn[1])
+                    self._maze_cells[rand_conn[0]][rand_conn[1]] = 'p'
+                if not can_reach:
+                    region_conns[conns[rand_conn][0]].update(region_conns[conns[rand_conn][1]])
+                    region_conns[conns[rand_conn][1]].update(region_conns[conns[rand_conn][0]])
+                    self._map.occupy(rand_conn[0], rand_conn[1])
+                    self._maze_cells[rand_conn[0]][rand_conn[1]] = 'p'
+                conns.pop(rand_conn)
+
+    def _can_reach(self, region_connections, start_region, end_region, visited=None):
+        """Checks if one region can be reached from another by travelling through connected regions
+
+        Args:
+            region_connections: The dictionary created in connect_maze_to_rooms
+            start_region: The region the search starts in
+            end_region: The region the search ends to
+            visited: The regions already visited during this search
+        Returns: True if the region can be reach, False otherwise
+        """
+        if visited is None:
+            visited = []
+        reachable = False
+        visited.append(start_region)
+        if end_region in region_connections[start_region]:
+            return True
+        for region in list(region_connections[start_region]):
+            if region not in visited:
+                reachable = self._can_reach(region_connections, region, end_region, visited)
+        return reachable
 
     def _get_connections(self):
         """Find all room-to-room or passage-to-room connections.
@@ -144,15 +171,21 @@ class MazeGenerationService:
             self._walls.append(coordinates)
             self._maze_cells[coordinates[0]][coordinates[1]] = 'w'
 
-    def _add_passage(self, coordinates):
+    def _add_passage(self, coordinates, region):
         """Adds a passage to the specified coordinates and surround it with walls
 
         Args:
             coordinates: (int, int) Tuple containing the coordinates of the passage to be added
+            region: The region the passage will belong to
         """
 
         self._maze_cells[coordinates[0]][coordinates[1]] = 'p'
         self._map.occupy(coordinates[0], coordinates[1])
+        if region in self._map.regions:
+            self._map.regions[region].append(coordinates)
+        else:
+            self._map.regions[region] = [coordinates]
+        self._map.cell_regions[coordinates] = region
         if (coordinates[0], coordinates[1]) in self._walls:
             self._walls.remove((coordinates[0], coordinates[1]))
         self._add_wall((coordinates[0], coordinates[1] + 1))

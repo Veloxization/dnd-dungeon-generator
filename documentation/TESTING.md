@@ -34,14 +34,6 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by occupying cells (1,1) and (1,3) and then unoccupying cell (1,1) and checking that cell (1,2) between them didn't get unoccupied
 - When a cell gets unoccupied, its adjacent neighbors also get unoccupied
     - Tested by occupying cell (1,1) and checking that the cells around it turn into unoccupied cells after cell (1,1) is unoccupied
-- When two non-adjacent cells are occupied, they are placed in separate regions
-    - Tested by occupying cells (1,1) and (3,3) and checking that the cells appear in regions 0 and 1 respectively
-- When two adjacent cells are occupied, they are placed in the same region
-    - Tested by occupying cells (1,1) and (1,2) and checking that both cells appear in region 0
-- When an occupied cell is marked unoccupied, it's also removed from its region
-    - Tested by occupying cells (1,1) and (1,2), then unoccupying cell (1,1) and checking that it no longer appears in region 0
-- When two regions are combined, the region with the smaller ID inherits the region with the larger ID
-    - Tested by occupying cells (1,1), (1,3), (1,4) and (2,4), and then occupying cell (1,2), then checking that the region ID of (1,3) and (1,4) and (2,4) becomes 0
 ### services/drawing_service
 - When a room's right edge extends beyond the right edge of the map, it's not drawn
     - Tested by drawing a 2x2 room to coordinates (49,1) on a 50x50 map and checking that it can't be drawn
@@ -108,6 +100,8 @@ This program has been automatically tested using pytest. Always up-to-date testi
     - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that only one of those connections is used
 - When odds of loops is 1, all possible connections are made
     - Tested by creating a 6x6 map, placing a room at coordinates (2,3), creating passages with two possible connections around it, and checking that both of those connections are used
+- When there are two possible ways to make connections between two regions, only one of those connections is used if the odds of loops is 0
+    - Tested by creating two 1x1 rooms at coordinates (1,1) and (1,3) and then stretching a hallway next to the two (coordinates (3,1), (3,2), (3,3)) and checking that only two of the possible connections is filled with passages
 - Dead ends are pruned from the corridors correctly
     - Tested by placing 1x1 rooms at coordinates (1,1) and (5,1) and building a corridor in between them, with a small branching dead end in the middle of it, pruning dead ends and checking that the dead end cell is turned into a wall
 ### services/room_generation_service
