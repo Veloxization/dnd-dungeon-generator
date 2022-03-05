@@ -14,3 +14,9 @@
 11. Numbers are placed in the top left corner of the rooms in order of generation
 12. The generated graphical representation is saved as a PNG image
 13. The Game Master's document is saved as a text file alongside the image
+## Flaws and improvements
+- Instead of the brute force method that attempts to place as many rooms as possible, I could have used another way of to actually fill the space with rooms
+    - For example, binary space partitioning
+- The GUI is missing many planned components, including the option to create any kind of room descriptions
+    - These would have to be added manually to the generated text document
+- The program lacks the planned feature of adding doors between rooms

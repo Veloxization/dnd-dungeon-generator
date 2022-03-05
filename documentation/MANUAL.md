@@ -36,3 +36,5 @@ How likely is it that the generated dungeon contains loops. A likelihood of "Non
 The name of the generated map file. A text document of matching name will also be generated. The text document will contain the information of different rooms.
 ### Generate dungeon button
 Once you are happy with the settings, pressing this button will start the room generation. If you made any errors in the values you entered earlier, the program will tell about them now. The program may seem unresponsive during generation and will inform you once it's done.
+## After generation
+The generated map's location is told in the GUI. In addition to the map image file, a text document is created. This text document contains the room numbers in numerical order and is intended for writing notes about individual rooms. Use it for writing descriptions, monster or NPC locations, traps, secrets, puzzles, loot...
