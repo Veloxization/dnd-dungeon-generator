@@ -14,3 +14,4 @@
 - [Report 4](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-4.md)
 - [Report 5](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-5.md)
 - [Report 6](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/weekly-report-6.md)
+- [Final report](https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/weekly-reports/final-report.md)
