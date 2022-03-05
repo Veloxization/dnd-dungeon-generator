@@ -125,18 +125,36 @@ This program has been automatically tested using pytest. Always up-to-date testi
 - If there is a single room, it appears in the string presentation of the data correctly
     - Tested by placing a single room and checking that the string representation of the data includes the text for "Room 1"
 ## Performance test results
-**Map:** 100x100    **Room generation attempts:** 100   **Repeats:** 50
-### Initialize map 
-0.02 ms
+**Map:** 100x100    **Room generation attempts:** 100   **Repeats:** 1000
+### Initialize map
+0.001062 ms
 ### Initialize room generation service
-0.00 ms
+0.000968 ms
 ### Generate random rooms
-0.44 ms
+0.230440 ms
+### Initialize drawing service
+0.347949 ms
+### Draw rooms
+0.000900 ms
 ### Initialize maze generation service
-0.96 ms
+0.384006 ms
 ### Initialize maze
-0.94 ms
+0.677761 ms
 ### Generate a perfect maze
-14.45 ms
+0.223764 ms
 ### Connect maze to rooms
-6.14 ms
+0.340917 ms
+### Prune dead ends from the dungeon
+0.332636 ms
+### Draw corridors
+0.045636 ms
+### Draw grid
+0.832158 ms
+### Draw room numbers
+0.005694 ms
+### Initialize room data generation service
+0.062727 ms
+### Initialize room data
+0.000788 ms
+## Performance test breakdown
+<img src="https://github.com/Veloxization/dnd-dungeon-generator/blob/main/documentation/images/performancechart.png">
